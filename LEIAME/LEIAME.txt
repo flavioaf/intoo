@@ -1,0 +1,29 @@
+/******************************************
+*******************************************
+Projeto: Consulta de Processos Intoo
+Autor: Flávio Almada de França
+******************************************
+******************************************
+
+******************************************
+ATENÇÃO!
+******************************************
+Passo a passo para testar o sistema:
+
+
+******************************************
+Instalação
+******************************************
+1) Instalar o programa iMacros-Setup que se encontra na mesma pasta
+2) Colar o arquivo imatl.dll na pasta C:/Arquivo de Programas/iOpus/iMacros
+3) Abrir o programa iMacros 9, clicar em Enter License Key
+4) Utilizar uma license key que está no arquivo serials.txt
+5) Copiar todo o conteúdo da pasta intoo (baixada pelo GitHub) para uma pasta fácil de acessar pelo Apache/XAMPP 
+
+******************************************
+Execução
+******************************************
+
+1) Dar start no Apache ou XAMPP em sua máquina
+2) Abrir o programa iimrunner.exe na pasta C:/Arquivo de Programas/iOpus/iMacros
+3) Abrir o projeto intoo via browser

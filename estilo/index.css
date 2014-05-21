@@ -1,0 +1,58 @@
+*{
+	color:white;
+	font-family:Arial, Verdana;
+}	
+
+body{
+	background-color:#006f9a;
+}
+
+#topo{
+	margin:25px 0px;
+}
+
+h2{
+	color:white;
+	margin-left:5%;
+}
+
+#meio{
+	padding:15px;
+	margin-top:25px;
+	margin-left:5%;
+	margin-right:5%;
+	background-color:#013b51;
+	color:white;
+}
+
+#meio img{
+	margin-left:30%;
+}
+
+.clear{
+	clear:both;
+}
+
+div.info, div.sucesso, div.erro {
+	font-size: 12px;	
+	padding: 12px;
+	width: auto;
+}
+
+div.info{
+	background-color: #e9e9e9;
+	border: 2px solid #c1c1c1;
+	color:black !important;
+}
+
+div.sucesso{
+	background-color: #7dc100;
+	border: 2px solid #239300;
+	color: white;
+}
+
+div.erro{
+	background-color: #df0000;
+	border: 2px solid #9a0606;
+	color: white;
+}

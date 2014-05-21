@@ -1,0 +1,19 @@
+﻿VERSION BUILD=9002379
+TAB T=1
+TAB CLOSEALLOTHERS
+URL GOTO=http://portal.trf1.jus.br/sjac/
+TAG POS=1 TYPE=A FORM=ACTION:http://processual.trf1.jus.br/consultaProcessual/processo.php ATTR=TXT:Outras<SP>opções<SP>de<SP>consulta
+'New tab opened
+TAB T=2
+TAB T=1
+TAB T=2
+TAB CLOSE
+URL GOTO=http://processual.trf1.jus.br/consultaProcessual/cpfCnpjParte.php?secao=AC
+TAG POS=1 TYPE=P FORM=NAME:form1 ATTR=TXT:CPF<SP>ou<SP>CNPJ<SP>da<SP>Parte
+TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:form1 ATTR=NAME:cpf_cnpj CONTENT=15.987.391/0001
+TAG POS=1 TYPE=INPUT:CHECKBOX FORM=NAME:form1 ATTR=NAME:mostrarBaixados CONTENT=YES
+TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:form1 ATTR=NAME:trf1_captcha CONTENT=9sf6
+TAG POS=1 TYPE=INPUT:SUBMIT FORM=NAME:form1 ATTR=NAME:enviar
+TAG POS=1 TYPE=INPUT:TEXT FORM=NAME:form1 ATTR=NAME:cpf_cnpj CONTENT=15987391000157
+TAG POS=2 TYPE=DIV ATTR=TXT:Nenhum<SP>registro<SP>encontrado<SP>para<SP>o<SP>CPF/CNPJ<SP>informado:[cnpj:<SP>15987391000157,<SP>mos*
+TAG POS=1 TYPE=DIV ATTR=CLASS:flash<SP>error EXTRACT=TXT
