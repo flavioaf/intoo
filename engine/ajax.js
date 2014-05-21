@@ -23,7 +23,7 @@ function criaRequisicao()
 function pegaDados() 
 { 
 	var uf;
-	var estado;
+	var estado;						
 
 	switch(numero)
 	{
@@ -56,34 +56,40 @@ function pegaDados()
 			estado = "Maranhão";
 		break;				
 	}
-
+	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
 	
 	cnpj = document.getElementById("cnpj").value;
 	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;
+	document.getElementById("resultado").innerHTML += "Tribunal Federal do " + estado + ":";
 	
 	var url = "executarConsulta.php?cnpj="+cnpj+"&uf="+uf+"&estado="+estado; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPagina; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
-	request.send(null); //Envia nulo para o servidor para indicar que a requisição terminou.
+	request.send(null); //Envia nulo para o servidor para indicar que a requisição terminou.		
 }
 
 function atualizaPagina() 
 { 
 	if (request.readyState == 4) 
 	{ 
+		numero++;
 		var texto = request.responseText;			
 		
 		if(texto != "")
 		{
-			document.getElementById("resultado").innerHTML = texto;
-			numero++;
+			document.getElementById("resultado").innerHTML += texto + "<br/>";			
 			
 			if(numero <= 7)
 			{
 				pegaDados();
 			}
-		}	
+			else
+			{
+				document.getElementById("info").innerHTML = "Consulta concluída!";
+				document.getElementById("imagem").innerHTML = "<img id='carregando' src='./estilo/images/success_512.png' width='300' height='300' />";		
+			}
+		}				
 	}
 }
