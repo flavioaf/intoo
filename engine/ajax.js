@@ -61,7 +61,7 @@ function pegaDados()
 	
 	cnpj = document.getElementById("cnpj").value;
 	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;
-	document.getElementById("resultado").innerHTML += "Tribunal Federal do " + estado + ":";
+	document.getElementById("tabelaResultados").innerHTML += "<tr><td>Tribunal Federal do " + estado + "</td>";
 	
 	var url = "executarConsulta.php?cnpj="+cnpj+"&uf="+uf+"&estado="+estado; //Escreva aqui o script que vai rodar no servidor.
 	
@@ -79,7 +79,7 @@ function atualizaPagina()
 		
 		if(texto != "")
 		{
-			document.getElementById("resultado").innerHTML += texto + "<br/>";			
+			document.getElementById("tabelaResultados").innerHTML += "<td class='tdTabela'>" + texto + "</td></tr>";			
 			
 			if(numero <= 7)
 			{

@@ -6,9 +6,9 @@
 		<div id="topo"></div>
 		<div id="meio">
 			<div id="info" class="info">Consultando Tribunais Federais...</div>
-			<div id="imagem"><img id="carregando"src="./estilo/images/ajax-loader-2.gif" /></div>
+			<div id="imagem"><img id="carregando" src="./estilo/images/ajax-loader-2.gif" /></div>
 			<input type="hidden" id="cnpj" name="cnpj" value="<?php echo $cnpj; ?>" />
-			<div id="resultado"></div>
+			<div id="resultado"><table id="tabelaResultados"><tr><th>Tribunal</th><th>Descri&ccedil;&atilde;o</th></tr></table></div>
 			
 			<script type="text/javascript">
 			<!--

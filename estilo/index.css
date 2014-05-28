@@ -29,6 +29,16 @@ h2{
 	margin-left:30%;
 }
 
+table{
+	border:1px solid white;
+	margin-top:25px;
+	margin-left:2%;
+}
+
+table td.tdTabela{
+	background-color:#3a95ef;
+}
+
 .clear{
 	clear:both;
 }
