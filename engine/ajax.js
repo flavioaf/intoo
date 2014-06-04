@@ -33,7 +33,7 @@ function pegaDados()
 		break;
 		case 2:
 			uf = "AP";
-			estado = "Amapá";
+			estado = "Amap&aacute;";
 		break;
 		case 3:
 			uf = "AM";
@@ -49,12 +49,40 @@ function pegaDados()
 		break;		
 		case 6:
 			uf = "GO";
-			estado = "Goiás";
+			estado = "Goi&aacute;s";
 		break;		
 		case 7:
 			uf = "MA";
-			estado = "Maranhão";
-		break;				
+			estado = "Maranh&atilde;o";
+		break;			
+		case 8:
+			uf = "MT";
+			estado = "Mato Grosso";
+		break;	
+		case 9:
+			uf = "MG";
+			estado = "Minas Gerais";
+		break;	
+		case 10:
+			uf = "PA";
+			estado = "Par&aacute;";
+		break;	
+		case 11:
+			uf = "PI";
+			estado = "Piau&iacute;";
+		break;			
+		case 12:
+			uf = "RO";
+			estado = "Rond&ocirc;nia";
+		break;	
+		case 13:
+			uf = "RR";
+			estado = "Roraima";
+		break;	
+		case 14:
+			uf = "TO";
+			estado = "Tocantins";
+		break;			
 	}
 	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
@@ -63,7 +91,7 @@ function pegaDados()
 	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;
 	document.getElementById("tabelaResultados").innerHTML += "<tr><td>Tribunal Federal do " + estado + "</td>";
 	
-	var url = "executarConsulta.php?cnpj="+cnpj+"&uf="+uf+"&estado="+estado; //Escreva aqui o script que vai rodar no servidor.
+	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPagina; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
@@ -72,6 +100,8 @@ function pegaDados()
 
 function atualizaPagina() 
 { 
+	var cor;
+
 	if (request.readyState == 4) 
 	{ 
 		numero++;
@@ -79,15 +109,24 @@ function atualizaPagina()
 		
 		if(texto != "")
 		{
-			document.getElementById("tabelaResultados").innerHTML += "<td class='tdTabela'>" + texto + "</td></tr>";			
+			if(numero%2 == 0)
+			{
+				cor = "par";
+			}
+			else
+			{
+				cor = "impar";
+			}
+		
+			document.getElementById("tabelaResultados").innerHTML += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";			
 			
-			if(numero <= 7)
+			if(numero <= 14)
 			{
 				pegaDados();
 			}
 			else
 			{
-				document.getElementById("info").innerHTML = "Consulta concluída!";
+				document.getElementById("info").innerHTML = "Consulta conclu&iacute;da!";
 				document.getElementById("imagem").innerHTML = "<img id='carregando' src='./estilo/images/success_512.png' width='300' height='300' />";		
 			}
 		}				

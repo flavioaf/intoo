@@ -59,3 +59,21 @@
 
 		echo $texto;
 	}
+	
+	/*
+	----------------------------------------------------------------------------------------------------------------------------------------
+	Função que tira pontuação do CNPJ
+	----------------------------------------------------------------------------------------------------------------------------------------	
+	*/	
+	function tiraPontuacao($cnpj)
+	{
+		$partesCNPJ = explode("/", $cnpj);
+		$metade1 = $partesCNPJ[0];
+		$metade2 = $partesCNPJ[1];
+		
+		$partes1 = explode(".", $metade1);
+		$partes2 = explode("-", $metade2);
+		$cnpj = $partes1[0] . $partes1[1] . $partes1[2] . $partes2[0] . $partes2[1];
+		
+		return $cnpj;
+	}

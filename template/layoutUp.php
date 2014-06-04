@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 		<meta name="author" content="Flávio de França">
 		<meta name="description" content="Projeto Intoo">
 		<meta name="keywords" content="Intoo, Processos, Tribunal Federal">
