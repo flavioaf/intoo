@@ -82,6 +82,34 @@ function pegaDados()
 		case 14:
 			uf = "TO";
 			estado = "Tocantins";
+		break;		
+		case 15:
+			uf = "ES";
+			estado = "Esp&iacute;rito Santo";
+		break;		
+		case 16:
+			uf = "RJ";
+			estado = "Rio de Janeiro";
+		break;
+		case 17:
+			uf = "MS";
+			estado = "Mato Grosso do Sul";
+		break;
+		case 18:
+			uf = "SP";
+			estado = "S&atilde;o Paulo";
+		break;				
+		case 19:
+			uf = "PR";
+			estado = "Paran&aacute;";
+		break;	
+		case 20:
+			uf = "RS";
+			estado = "Rio Grande do Sul";
+		break;	
+		case 21:
+			uf = "SC";
+			estado = "Santa Catarina";
 		break;			
 	}
 	
@@ -91,7 +119,7 @@ function pegaDados()
 	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;
 	document.getElementById("tabelaResultados").innerHTML += "<tr><td>Tribunal Federal do " + estado + "</td>";
 	
-	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf; //Escreva aqui o script que vai rodar no servidor.
+	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPagina; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
@@ -100,7 +128,7 @@ function pegaDados()
 
 function atualizaPagina() 
 { 
-	var cor;
+	var cor;	
 
 	if (request.readyState == 4) 
 	{ 
@@ -120,7 +148,7 @@ function atualizaPagina()
 		
 			document.getElementById("tabelaResultados").innerHTML += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";			
 			
-			if(numero <= 14)
+			if(numero <= 21)
 			{
 				pegaDados();
 			}

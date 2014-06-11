@@ -3,5 +3,5 @@
 	extract($_GET);
 	
 	$consultaTribunal = new ConsultaTribunal();
-	$consultaTribunal->setUp($uf, $cnpj);	
+	$consultaTribunal->setUp($uf, $cnpj, $numero);	
 ?>
