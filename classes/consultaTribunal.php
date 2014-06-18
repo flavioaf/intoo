@@ -22,10 +22,18 @@
 		{
 			$this->consulta3Regiao($uf, $cnpj);
 		}
-		if($numero >= 19) //4ª Região
+		if($numero >= 19 && $numero <= 21) //4ª Região
 		{
 			$this->consulta4Regiao($uf, $cnpj);
-		}		
+		}	
+		if($numero >= 22 && $numero <= 27) //5ª Região
+		{
+			$this->consulta5Regiao($uf, $cnpj);
+		}
+		if($numero >= 28) //Tribunais de Justiça
+		{
+			$this->consultaTribunaisJustica($uf, $cnpj);
+		}
 	  }
 	  
 	  protected function consulta1Regiao($uf, $cnpj)
@@ -210,6 +218,9 @@
 			$selenium1->waitForPageToLoad("10000");			
 			$resultado = $selenium1->getText("id=areaResultadoAcompanhamento");
 			
+			$selenium1->stop();
+			$selenium1->close();	
+			
 			echo $resultado;
 		}
 		else
@@ -238,8 +249,61 @@
 			$selenium1->waitForPageToLoad("10000");			
 			$resultado = $selenium1->getText("id=divConteudo");
 			
+			$selenium1->stop();
+			$selenium1->close();	
+			$selenium2->stop();
+			$selenium2->close();	
+			
 			echo $resultado;						
 		}		
+	  }
+	  
+	  protected function consulta5Regiao($uf, $cnpj)
+	  {
+		switch($uf)
+		{
+			case "AL":
+				$url = "http://www.trf5.jus.br/";			
+			break;
+			case "CE":
+				$url = "http://www.jfce.jus.br/";			
+			break;
+			case "PB":
+				$url = "http://www.jfpb.jus.br/";			
+			break;			
+			case "PE":
+				$url = "http://www.jfpe.jus.br/";			
+			break;	
+			case "RN":
+				$url = "http://www.jfrn.jus.br/";			
+			break;	
+			case "SE":
+				$url = "http://www.jfse.jus.br/";			
+			break;				
+		}
+
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();	
+
+		$selenium->click("id=aui-3-2-0-11385");
+		$selenium->select("name=CodTipDocPess", "value=2");
+		$selenium->type("name=NumDocPess",$cnpj);
+		$selenium->click("id=Pesquisar");
+		$selenium->waitForPageToLoad("40000");		
+		
+		$resultado = $selenium->getText("//form[@id='ConsProc']/table/tbody/tr/td/table[3]/tbody/tr/td/p/font/span/b");
+		
+		$selenium->stop();
+		$selenium->close();	
+		
+		echo $resultado;
+	  }
+	  
+	  protected function consultaTribunaisJustica($uf, $cnpj)
+	  {
+		echo "Nenhum processo encontrado";
 	  }
 	}
 ?>

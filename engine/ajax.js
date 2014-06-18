@@ -1,6 +1,8 @@
 //Funções para utilização de AJAX
-
 // Esse script é uma biblioteca que precisa ser adicionada para a utilização das funções de alteração de texto dinâmico.
+
+var tabela = "";
+
 function criaRequisicao() 
 { 
 	try {
@@ -23,8 +25,9 @@ function criaRequisicao()
 function pegaDados() 
 { 
 	var uf;
-	var estado;						
-
+	var estado;
+	tabela = "";
+	
 	switch(numero)
 	{
 		case 1:
@@ -111,14 +114,95 @@ function pegaDados()
 			uf = "SC";
 			estado = "Santa Catarina";
 		break;			
+		case 22:
+			uf = "AL";
+			estado = "Alagoas";
+		break;
+		case 23:
+			uf = "CE";
+			estado = "Cear&aacute;";
+		break;
+		case 24:
+			uf = "PB";
+			estado = "Para&iacute;ba";
+		break;
+		case 25:
+			uf = "PE";
+			estado = "Pernambuco";
+		break;
+		case 26	:
+			uf = "RN";
+			estado = "Rio Grande do Norte";
+		break;
+		case 27:
+			uf = "SE";
+			estado = "Sergipe";
+		break;		
+		case 28:
+			uf = "AC";
+			estado = "Acre";
+		break;	
+		case 29:
+			uf = "AL";
+			estado = "Alagoas";
+		break;	
+		case 30:
+			uf = "AP";
+			estado = "Amap&aacute;";
+		break;			
+		case 31:
+			uf = "BA";
+			estado = "Bahia";
+		break;	
+		case 32:
+			uf = "CE";
+			estado = "Cear&aacute;";
+		break;	
+		case 33:
+			uf = "DF";
+			estado = "Distrito Federal";
+		break;	
+		case 34:
+			uf = "ES";
+			estado = "Esp&iacute;rito Santo";
+		break;		
+		case 35:
+			uf = "MA";
+			estado = "Maranh&atilde;o";
+		break;	
+		case 36:
+			uf = "MS";
+			estado = "Mato Grosso do Sul";
+		break;		
+		case 37:
+			uf = "MT";
+			estado = "Mato Grosso";
+		break;		
+		case 38:
+			uf = "PA";
+			estado = "Par&aacute;";
+		break;	
+		case 39:
+			uf = "PB";
+			estado = "Para&iacute;ba";
+		break;			
 	}
 	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
 	
 	cnpj = document.getElementById("cnpj").value;
-	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;
-	document.getElementById("tabelaResultados").innerHTML += "<tr><td>Tribunal Federal do " + estado + "</td>";
 	
+	if(numero <= 27)
+	{
+		document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;	
+		tabela += "<tr><td class='tdEstado'>Tribunal Federal do " + estado + "</td>";
+	}
+	else
+	{
+		document.getElementById("info").innerHTML = "Consultando Tribunal de Justi&ccedil;a do " + estado;	
+		tabela += "<tr><td class='tdEstado'>Tribunal de Justi&ccedil;a do " + estado + "</td>";
+	}
+		
 	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
@@ -146,16 +230,25 @@ function atualizaPagina()
 				cor = "impar";
 			}
 		
-			document.getElementById("tabelaResultados").innerHTML += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";			
+			tabela += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";
 			
-			if(numero <= 21)
+			if(numero <= 27)
+			{
+				document.getElementById("tabelaFederais").innerHTML += tabela;		
+			}
+			else
+			{
+				document.getElementById("tabelaJustica").innerHTML += tabela;
+			}
+			
+			if(numero < 40)
 			{
 				pegaDados();
 			}
 			else
 			{
 				document.getElementById("info").innerHTML = "Consulta conclu&iacute;da!";
-				document.getElementById("imagem").innerHTML = "<img id='carregando' src='./estilo/images/success_512.png' width='300' height='300' />";		
+				document.getElementById("imagem").innerHTML = "<img id='carregando' src='./estilo/images/success_512.png' width='75' height='75' />";		
 			}
 		}				
 	}
