@@ -60,6 +60,7 @@
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
 		$selenium2->windowMaximize();
+		$selenium2->waitForPageToLoad("10000");
 		$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
 		$selenium2->focus('name=file');
 		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
@@ -110,6 +111,7 @@
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
 		$selenium->select("id=TipDocPess", "value=2");
 		$selenium->type("id=NumDocPess", $cnpj);
 		$captcha  = $selenium->getText("//form[@id='ConsProc']/table/tbody/tr[3]/td/table/tbody/tr[11]/td/font/span/b[2]");
@@ -148,6 +150,7 @@
 		$selenium->start();
 		$selenium->open("http://www.jfsp.jus.br/foruns-federais/");
 		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
 		
 		if($uf == "SP")
 		{
@@ -198,6 +201,7 @@
 		$selenium1->start();
 		$selenium1->open($url);
 		$selenium1->windowMaximize();
+		$selenium1->waitForPageToLoad("10000");
 		
 		if($uf != "SC")
 		{
@@ -238,6 +242,7 @@
 			$selenium2->setTimeout(60000);
 			$selenium2->open("http://beatcaptchas.com/captcha.php");
 			$selenium2->windowMaximize();
+			$selenium2->waitForPageToLoad("10000");
 			$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
 			$selenium2->focus('name=file');
 			$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
@@ -285,7 +290,8 @@
 		$selenium = new Testing_Selenium("*chrome", $url);
 		$selenium->start();
 		$selenium->open($url);
-		$selenium->windowMaximize();	
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");		
 
 		$selenium->click("id=aui-3-2-0-11385");
 		$selenium->select("name=CodTipDocPess", "value=2");
@@ -299,11 +305,264 @@
 		$selenium->close();	
 		
 		echo $resultado;
-	  }
+	  }	 
 	  
 	  protected function consultaTribunaisJustica($uf, $cnpj)
 	  {
-		echo "Nenhum processo encontrado";
+		$resultado = "";
+		$consulta = false;
+		
+		switch($uf)
+		{
+			case "AC":	
+				$url = "http://esaj.tjac.jus.br/cpo/pg/search.do?paginaConsulta=1&localPesquisa.cdLocal=1&cbPesquisa=DOCPARTE&tipoNuProcesso=SAJ&dePesquisa=".$cnpj."&pbEnviar=Pesquisar";
+				$resultado = $this->consultaTribunalJusticaAC($url);
+				$consulta = true;
+			break;			
+			case "AL":
+				$url = "http://www2.tjal.jus.br/cpopg/search.do;jsessionid=FF1AEA3366DA36C6397FB6CE055C1AE8?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
+				$resultado = $this->consultaTribunalJusticaAL($url);
+				$consulta = true;			
+			break;
+			case "AP":
+				$resultado = "Voc&ecirc; precisa informar pelo menos um sobrenome da parte para realizar a consulta.";
+				$consulta = true;
+			break;
+			case "BA":
+				$url = "http://esaj.tjba.jus.br/cpopg/search.do;jsessionid=C5B4903AD4877336FB91CFA8FDC68CFF.cpopg2?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
+				$resultado = $this->consultaTribunalJusticaBA($url);
+				$consulta = true;
+			break;		
+			case "CE":
+				$url = "http://esaj.tjce.jus.br/cpopg/search.do;jsessionid=C6F6DE39A53B03910D29330FC252B412.cpos1?conversationId=&dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
+				$resultado = $this->consultaTribunalJusticaCE($url);
+				$consulta = true;
+			break;
+			case "DF":
+				$url = "http://tjdf19.tjdft.jus.br/cgi-bin/tjcgi1?NXTPGM=tjhtml101&submit=ok&SELECAO=10&CHAVE=".$cnpj."&CIRC=ZZ&CHAVE1=&ORIGEM=INTER";
+				$resultado = $this->consultaTribunalJusticaDF($url);
+				$consulta = true;
+			break;		
+			case "ES":
+				$url = "http://aplicativos.tjes.jus.br/consultaunificada/faces/pages/pesquisaSimplificada.xhtml";
+				$resultado = $this->consultaTribunalJusticaES($url, $cnpj);
+				$consulta = true;
+			break;	
+			// case "MA":
+				// $url = "http://pje.tjma.jus.br/pje/ConsultaPublica/listView.seam";
+				// $resultado = $this->consultaTribunalJusticaMA($url, $cnpj);
+				// $consulta = true;
+			// break;				
+		}
+
+		if(!$consulta)
+		{
+			$resultado .= "Nenhum processo encontrado";
+		}
+		
+		echo $resultado;			
+	  }	 
+
+	  protected function consultaTribunalJusticaAC($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= "Processo: " . $selenium->getText("//table[3]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
+		$resultado .= "Classe: " . $selenium->getText("css=span > span") . "<br/>";
+		$resultado .= $selenium->getText("//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
+		$resultado .= "Assunto: " . $selenium->getText("xpath=(//span[@id=''])[3]") . "<br/>";
+		$resultado .= "Local f&iacute;sico: " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
+		//Buscar mais campos posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }	  	
+
+	  protected function consultaTribunalJusticaAL($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= "Processo: " . $selenium->getText("css=a.linkProcesso") . "<br/>";		
+		$resultado .= $selenium->getText("css=div.espacamentoLinhas") . "<br/>";
+		$resultado .= $selenium->getText("//div[@id='divProcesso1M0001B730000']/div/div[3]") . "<br/>";	
+		//Buscar mais campos posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }		  
+	  
+	  protected function consultaTribunalJusticaBA($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1->start();
+		$selenium1->open($url);	
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$selenium1->windowMaximize();		
+		$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+		$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+		$captcha = imagecreate(200, 50);
+		
+		imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
+		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+		
+		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2->start();
+		$selenium2->setTimeout(60000);
+		$selenium2->open("http://beatcaptchas.com/captcha.php");
+		$selenium2->windowMaximize();
+		$selenium2->waitForPageToLoad("10000");
+		$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+		$selenium2->focus('name=file');
+		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+		$selenium2->click("name=submit");
+		$selenium2->waitForPageToLoad("40000");
+		$textoCaptcha = $selenium2->getText("css=td");	
+		
+		$selenium1->type("id=defaultCaptchaCampo", $textoCaptcha);
+		$selenium1->click("id=pbEnviar");
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$resultado .= "Processo: " . $selenium1->getText("css=a.linkProcesso") . "<br/>";		
+		$resultado .= $selenium1->getText("css=div.espacamentoLinhas") . "<br/>";
+		$resultado .= $selenium1->getText("//div[@id='divProcesso0100010S60000']/div/div[3]") . "<br/>";	
+		// Buscar mais campos posteriormente
+		
+		$selenium1->stop();
+		$selenium1->close();	
+		$selenium2->stop();
+		$selenium2->close();			
+
+		return $resultado;
 	  }
-	}
+
+	  protected function consultaTribunalJusticaCE($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= "Processo: " . $selenium->getText("css=a.linkProcesso") . "<br/>";		
+		$resultado .= $selenium->getText("css=div.espacamentoLinhas") . "<br/>";
+		$resultado .= $selenium->getText("//div[@id='divProcesso010007GNR0000']/div/div[3]") . "<br/>";	
+		//Buscar mais campos posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }		
+	  
+	  protected function consultaTribunalJusticaDF($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= $selenium->getText("css=font");	
+		//Buscar mais dados posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }	  
+	  
+	  protected function consultaTribunalJusticaES($url, $cnpj)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$selenium->type("id=txtPesquisaSimplificada", $cnpj);
+		$selenium->click("id=btnRealizarPesquisaSimplificada");
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= $selenium->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div") . "<br/>";	
+		$resultado .= $selenium->getText("css=td > div.ui-dt-c");	
+		//Buscar mais dados posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }		  
+	  
+	  // protected function consultaTribunalJusticaMA($url, $cnpj)
+	  // {		
+		// $resultado = "";
+	  
+		// $selenium1 = new Testing_Selenium("*chrome", $url);
+		// $selenium1->start();
+		// $selenium1->open($url);
+		// $selenium1->windowMaximize();
+		// $selenium1->waitForPageToLoad("20000");
+			
+		// $selenium1->click("document.fPP.tipoMascaraDocumento[1]");
+		// $selenium1->type("id=fPP:dpDec:documentoParte", $cnpj);
+		
+		// $selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+		// $printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+		// $captcha = imagecreate(200, 50);
+		
+		// imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
+		// imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+		
+		// $selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		// $selenium2->start();
+		// $selenium2->setTimeout(60000);
+		// $selenium2->open("http://beatcaptchas.com/captcha.php");
+		// $selenium2->windowMaximize();
+		// $selenium2->waitForPageToLoad("10000");
+		// $selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+		// $selenium2->focus('name=file');
+		// $selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+		// $selenium2->click("name=submit");
+		// $selenium2->waitForPageToLoad("40000");
+		// $textoCaptcha = $selenium2->getText("css=td");
+		
+		// $selenium1->waitForPageToLoad("10000");
+		
+		// $resultado .= $selenium1->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div") . "<br/>";	
+		// $resultado .= $selenium1->getText("css=td > div.ui-dt-c");	
+		// Buscar mais dados posteriormente
+		
+		// $selenium1->stop();
+		// $selenium1->close();	
+		// $selenium2->stop();
+		// $selenium2->close();		
+
+		// return $resultado;
+	  // }	  
+	}		  	
 ?>

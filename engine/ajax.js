@@ -185,7 +185,55 @@ function pegaDados()
 		case 39:
 			uf = "PB";
 			estado = "Para&iacute;ba";
-		break;			
+		break;	
+		case 40:
+			uf = "PE";
+			estado = "Pernambuco";
+		break;		
+		case 41:
+			uf = "PI";
+			estado = "Piau&iacute;";
+		break;	
+		case 42:
+			uf = "PR";
+			estado = "Paran&aacute;";
+		break;	
+		case 43:
+			uf = "RJ";
+			estado = "Rio de Janeiro";
+		break;	
+		case 44:
+			uf = "RN";
+			estado = "Rio Grande do Norte";
+		break;	
+		case 45:
+			uf = "RO";
+			estado = "Rond&ocirc;nia";
+		break;	
+		case 46:
+			uf = "RR";
+			estado = "Roraima";
+		break;	
+		case 47:
+			uf = "RS";
+			estado = "Rio Grande do Sul";
+		break;	
+		case 48:
+			uf = "SC";
+			estado = "Santa Catarina";
+		break;
+		case 49:
+			uf = "SE";
+			estado = "Sergipe";
+		break;
+		case 50:
+			uf = "TO";
+			estado = "Tocantins";
+		break;		
+		case 51:
+			uf = "SP";
+			estado = "S&atilde;o Paulo";
+		break;		
 	}
 	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
@@ -232,7 +280,7 @@ function atualizaPagina()
 		
 			tabela += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";
 			
-			if(numero <= 27)
+			if(numero <= 28)
 			{
 				document.getElementById("tabelaFederais").innerHTML += tabela;		
 			}
@@ -241,7 +289,7 @@ function atualizaPagina()
 				document.getElementById("tabelaJustica").innerHTML += tabela;
 			}
 			
-			if(numero < 40)
+			if(numero <= 51)
 			{
 				pegaDados();
 			}
