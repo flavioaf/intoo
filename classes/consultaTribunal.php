@@ -80,6 +80,7 @@
 			$nomeParte = $selenium1->getText("css=a.listar-processo");
 			
 			$texto = $numeroProcessos . " processos , " . $nomeParte;
+			// Buscar mais campos posteriormente
 		}
 		else
 		{
@@ -377,7 +378,17 @@
 				$url = "http://www.tjpe.jus.br/processos/consulta2grau/ole_busca_processos2.asp";
 				$resultado = $this->consultaTribunalJusticaPE($url, $cnpj);
 				$consulta = true;
-			break;				
+			break;		
+			case "PI":
+				$url = "http://www.tjpi.jus.br/themisconsulta/";
+				$resultado = $this->consultaTribunalJusticaPI($url, $cnpj);
+				$consulta = true;
+			break;	
+			case "PR":
+				$url = "http://portal.tjpr.jus.br/civel/publico/consulta/processo.do?actionType=iniciar";
+				$resultado = $this->consultaTribunalJusticaPR($url, $cnpj);
+				$consulta = true;
+			break;			
 		}
 
 		if(!$consulta)
@@ -642,16 +653,19 @@
 	  protected function consultaTribunalJusticaMT($url, $cnpj)
 	  {
 		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
+		//Consulta por nome
 	  }
 	  
 	  protected function consultaTribunalJusticaPA($url, $cnpj)
 	  {
 		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
+		//Consulta por nome
 	  }	  
 	  
 	  protected function consultaTribunalJusticaPB($url, $cnpj)
 	  {
 		return "Não existem resultados para o Processo informado no grau de jurisdição selecionado.";
+		//Consulta por nome
 	  }
 
 	  protected function consultaTribunalJusticaPE($url, $cnpj)
@@ -703,5 +717,17 @@
 
 		return $resultado;
 	  }	  
+	  
+	  protected function consultaTribunalJusticaPI($url, $cnpj)
+	  {
+		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
+		//Consulta por nome
+	  }	  	 
+
+	  protected function consultaTribunalJusticaPR($url, $cnpj)
+	  {
+		return "Nenhum registro encontrado";
+		//Consulta por número do processo
+	  }	 	  
 	}		  	
 ?>
