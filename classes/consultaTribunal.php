@@ -348,11 +348,36 @@
 				$resultado = $this->consultaTribunalJusticaES($url, $cnpj);
 				$consulta = true;
 			break;	
-			// case "MA":
-				// $url = "http://pje.tjma.jus.br/pje/ConsultaPublica/listView.seam";
-				// $resultado = $this->consultaTribunalJusticaMA($url, $cnpj);
-				// $consulta = true;
-			// break;				
+			case "MA":
+				$url = "http://pje.tjma.jus.br/pje/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTribunalJusticaMA($url, $cnpj);
+				$consulta = true;
+			break;	
+			case "MS":
+				$url = "http://www.tjms.jus.br/cpopg5/search.do?cdForo=0&cbPesquisa=DOCPARTE&dePesquisa=".$cnpj."&tipoNuProcesso=SAJ";
+				$resultado = $this->consultaTribunalJusticaMS($url);
+				$consulta = true;
+			break;	
+			case "MT":
+				$url = "http://www.tjmt.jus.br/paginas/servicos/ConsultaProcessual/Default.aspx";
+				$resultado = $this->consultaTribunalJusticaMT($url, $cnpj);
+				$consulta = true;
+			break;		
+			case "PA":
+				$url = "http://wsconsultas.tjpa.jus.br/consultaprocessoportal/consulta/consulta/principal";
+				$resultado = $this->consultaTribunalJusticaPA($url, $cnpj);
+				$consulta = true;
+			break;		
+			case "PB":
+				$url = "http://www.tjpb.jus.br/";
+				$resultado = $this->consultaTribunalJusticaPB($url, $cnpj);
+				$consulta = true;
+			break;	
+			case "PE":
+				$url = "http://www.tjpe.jus.br/processos/consulta2grau/ole_busca_processos2.asp";
+				$resultado = $this->consultaTribunalJusticaPE($url, $cnpj);
+				$consulta = true;
+			break;				
 		}
 
 		if(!$consulta)
@@ -518,51 +543,165 @@
 		return $resultado;
 	  }		  
 	  
-	  // protected function consultaTribunalJusticaMA($url, $cnpj)
-	  // {		
-		// $resultado = "";
+	  protected function consultaTribunalJusticaMA($url, $cnpj)
+	  {		
+		$resultado = "";
 	  
-		// $selenium1 = new Testing_Selenium("*chrome", $url);
-		// $selenium1->start();
-		// $selenium1->open($url);
-		// $selenium1->windowMaximize();
-		// $selenium1->waitForPageToLoad("20000");
+		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1->start();
+		$selenium1->open($url);
+		$selenium1->windowMaximize();
+		$selenium1->waitForPageToLoad("20000");
 			
-		// $selenium1->click("document.fPP.tipoMascaraDocumento[1]");
-		// $selenium1->type("id=fPP:dpDec:documentoParte", $cnpj);
+		$selenium1->click("document.fPP.tipoMascaraDocumento[1]");
+		$selenium1->type("id=fPP:dpDec:documentoParte", $cnpj);
 		
-		// $selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
-		// $printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
-		// $captcha = imagecreate(200, 50);
+		$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+		$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+		$captcha = imagecreate(120, 40);
 		
-		// imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
-		// imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+		imagecopy($captcha, $printscreen, 0, 0, 100, 550, 120, 40);
+		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
-		// $selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
-		// $selenium2->start();
-		// $selenium2->setTimeout(60000);
-		// $selenium2->open("http://beatcaptchas.com/captcha.php");
-		// $selenium2->windowMaximize();
-		// $selenium2->waitForPageToLoad("10000");
-		// $selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
-		// $selenium2->focus('name=file');
-		// $selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
-		// $selenium2->click("name=submit");
-		// $selenium2->waitForPageToLoad("40000");
-		// $textoCaptcha = $selenium2->getText("css=td");
+		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2->start();
+		$selenium2->setTimeout(60000);
+		$selenium2->open("http://beatcaptchas.com/captcha.php");
+		$selenium2->windowMaximize();
+		$selenium2->waitForPageToLoad("10000");
+		$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+		$selenium2->focus('name=file');
+		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+		$selenium2->click("name=submit");
+		$selenium2->waitForPageToLoad("40000");
+		$textoCaptcha = $selenium2->getText("css=td");
 		
-		// $selenium1->waitForPageToLoad("10000");
+		echo "Captcha: " . $textoCaptcha . "<br/>";
 		
-		// $resultado .= $selenium1->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div") . "<br/>";	
-		// $resultado .= $selenium1->getText("css=td > div.ui-dt-c");	
-		// Buscar mais dados posteriormente
+		$selenium1->type("id=fPP:j_id113:verifyCaptcha", $textoCaptcha);
+		$selenium1->click("id=fPP:searchProcessos");
+		$selenium1->waitForPageToLoad("10000");
 		
-		// $selenium1->stop();
-		// $selenium1->close();	
-		// $selenium2->stop();
-		// $selenium2->close();		
+		$resultado .= $selenium1->getText("css=span.rich-messages-label");	
+		
+		$selenium1->stop();
+		$selenium1->close();	
+		$selenium2->stop();
+		$selenium2->close();		
 
-		// return $resultado;
-	  // }	  
+		return $resultado;
+	  }	  
+	  
+	  protected function consultaTribunalJusticaMS($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1->start();
+		$selenium1->open($url);	
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$selenium1->windowMaximize();		
+		$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+		$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+		$captcha = imagecreate(200, 50);
+		
+		imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
+		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+		
+		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2->start();
+		$selenium2->setTimeout(60000);
+		$selenium2->open("http://beatcaptchas.com/captcha.php");
+		$selenium2->windowMaximize();
+		$selenium2->waitForPageToLoad("10000");
+		$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+		$selenium2->focus('name=file');
+		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+		$selenium2->click("name=submit");
+		$selenium2->waitForPageToLoad("40000");
+		$textoCaptcha = $selenium2->getText("css=td");	
+		
+		$selenium1->type("id=defaultCaptchaCampo", $textoCaptcha);
+		$selenium1->click("id=pbEnviar");
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$resultado .= "Processo: " . $selenium1->getText("css=a.linkProcesso") . "<br/>";		
+		$resultado .= $selenium1->getText("css=div.espacamentoLinhas") . "<br/>";
+		$resultado .= $selenium1->getText("//div[@id='divProcesso2W0000FZY0000']/div/div[3]") . "<br/>";	
+		// Buscar mais campos posteriormente
+		
+		$selenium1->stop();
+		$selenium1->close();	
+		$selenium2->stop();
+		$selenium2->close();			
+
+		return $resultado;
+	  }
+	  
+	  protected function consultaTribunalJusticaMT($url, $cnpj)
+	  {
+		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
+	  }
+	  
+	  protected function consultaTribunalJusticaPA($url, $cnpj)
+	  {
+		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
+	  }	  
+	  
+	  protected function consultaTribunalJusticaPB($url, $cnpj)
+	  {
+		return "Não existem resultados para o Processo informado no grau de jurisdição selecionado.";
+	  }
+
+	  protected function consultaTribunalJusticaPE($url, $cnpj)
+	  {		
+		$resultado = "";
+	  
+		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1->start();
+		$selenium1->open($url);	
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$selenium1->click("id=rbBusca6");
+		$selenium1->select("id=tipo","label=CNPJ");
+		
+		$selenium1->windowMaximize();		
+		$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+		$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+		$captcha = imagecreate(120, 30);
+		
+		imagecopy($captcha, $printscreen, 0, 0, 210, 300, 120, 30);
+		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+		
+		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2->start();
+		$selenium2->setTimeout(60000);
+		$selenium2->open("http://beatcaptchas.com/captcha.php");
+		$selenium2->windowMaximize();
+		$selenium2->waitForPageToLoad("10000");
+		$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+		$selenium2->focus('name=file');
+		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+		$selenium2->click("name=submit");
+		$selenium2->waitForPageToLoad("40000");
+		$textoCaptcha = $selenium2->getText("css=td");
+
+		echo "Captcha: " . $textoCaptcha . "<br/>";
+		
+		$selenium1->type("id=CaptchaBox6", $textoCaptcha);
+		$selenium1->click("css=input.input_02");
+		$selenium1->waitForPageToLoad("10000");		
+		
+		$resultado .= $selenium1->getText("css=span.menu_01");		
+		// Buscar mais campos posteriormente
+		
+		$selenium1->stop();
+		$selenium1->close();	
+		$selenium2->stop();
+		$selenium2->close();			
+
+		return $resultado;
+	  }	  
 	}		  	
 ?>
