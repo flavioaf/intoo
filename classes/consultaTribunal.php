@@ -30,10 +30,14 @@
 		{
 			$this->consulta5Regiao($uf, $cnpj);
 		}
-		if($numero >= 28) //Tribunais de Justiça
+		if($numero >= 28 && $numero < 52) //Tribunais de Justiça
 		{
 			$this->consultaTribunaisJustica($uf, $cnpj);
 		}
+		if($numero >= 52) //Tribunais Regionais do Trabalho
+		{
+			$this->consultaTribunaisRegionaisTrabalho($cnpj, $numero);
+		}		
 	  }
 	  
 	  protected function consulta1Regiao($uf, $cnpj)
@@ -388,7 +392,32 @@
 				$url = "http://portal.tjpr.jus.br/civel/publico/consulta/processo.do?actionType=iniciar";
 				$resultado = $this->consultaTribunalJusticaPR($url, $cnpj);
 				$consulta = true;
-			break;			
+			break;
+			case "RJ":
+				$url = "http://www4.tjrj.jus.br/ConsultaUnificada/consulta.do#tabs-cpf-indice4";
+				$resultado = $this->consultaTribunalJusticaRJ($url, $cnpj);
+				$consulta = true;
+			break;	
+			case "RN":
+				$url = "http://esaj.tjrn.jus.br/cpo/pg/search.do;jsessionid=CA600C1A47B9BCC34FB046B144588F8D.appsWeb1?paginaConsulta=1&localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&tipoNuProcesso=UNIFICADO&dePesquisa=".$cnpj;
+				$resultado = $this->consultaTribunalJusticaRN($url);
+				$consulta = true;
+			break;
+			case "RO":
+				$url = "http://www.tjro.jus.br/pginicial/form_appg_apsg.shtml";
+				$resultado = $this->consultaTribunalJusticaRO($url, $cnpj);
+				$consulta = true;
+			break;	
+			case "RR":
+				$url = "http://www.tjro.jus.br/pginicial/form_appg_apsg.shtml";
+				$resultado = $this->consultaTribunalJusticaRO($url);
+				$consulta = true;
+			break;
+			case "RS":
+				$url = "http://www.tjrs.jus.br/busca/?tb=proc";
+				$resultado = $this->consultaTribunalJusticaRO($url);
+				$consulta = true;
+			break;				
 		}
 
 		if(!$consulta)
@@ -728,6 +757,225 @@
 	  {
 		return "Nenhum registro encontrado";
 		//Consulta por número do processo
+	  }
+	  
+	  protected function consultaTribunalJusticaRJ($url, $cnpj)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);	
+		$selenium->waitForPageToLoad("10000");		
+		
+		$selenium->select("document.consultaCPFForm.origem","label=1ªInstância");
+		$selenium->select("document.consultaCPFForm.comarca","label=Capital");
+		$selenium->select("document.consultaCPFForm.competencia","label=Cível");
+		$selenium->type("id=numeroCpfCnpj", $cnpj);
+		$selenium->click("id=pesquisa");
+		$selenium->waitForPageToLoad("10000");
+
+		$resultado .= $selenium->getText("link=0007531-81.2013.8.19.0001") . "<br/>";		
+		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[2]/td") . "<br/>";		
+		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[3]/td") . "<br/>";		
+		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[4]/td") . "<br/>";		
+		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[5]/td") . "<br/>";		
+		// Buscar mais campos posteriormente
+		
+		$selenium->stop();
+		$selenium->close();	
+		
+		return $resultado;
+	  }
+
+	  protected function consultaTribunalJusticaRN($url)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= $selenium->getText("css=.fundoClaro > div.fundoClaro") . "<br/>";
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }
+
+	  protected function consultaTribunalJusticaRO($url, $cnpj)
+	  {		
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$selenium->click("id=grau");
+		$selenium->select("id=tipo","label=Documento das Partes");
+		$selenium->select("id=TpDoc","label=CNPJ");
+		$selenium->type("id=argumentos",$cnpj);
+		$selenium->click("name=Submit3");
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= $selenium->getText("css=#corpo > div");
+		//Buscar mais campos futuramente
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }
+
+	  protected function consultaTribunalJusticaRR($url)
+	  {
+		return "N&atilde;o foi encontrado nenhum processo com o crit&eacute;rio de pesquisa utilizado!";
+		//Consulta por nome
+	  }	  	 
+
+	  protected function consultaTribunalJusticaRS($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por nome
+	  }
+
+	  protected function consultaTribunaisRegionaisTrabalho($cnpj, $numero)
+	  {
+		$resultado = "";
+		$consulta = false;		
+		
+		switch($numero)
+		{
+			case 52:	
+				$url = "http://www.trt1.jus.br/consulta-processual";
+				$resultado = $this->consultaTRT1Regiao($url);
+				$consulta = true;
+			break;
+			case 53:	
+				$url = "http://aplicacoes5.trtsp.jus.br/consultasphp/public/index.php/primeirainstancia/cnpj";
+				$resultado = $this->consultaTRT2Regiao($url, $cnpj);
+				$consulta = true;
+			break;			
+			case 54:	
+				$url = "http://www.trt3.jus.br/";
+				$resultado = $this->consultaTRT3Regiao($url);
+				$consulta = true;
+			break;
+			case 55:	
+				$url = "http://www.trt4.jus.br/portal/portal/trt4/consultas/consulta_lista";
+				$resultado = $this->consultaTRT4Regiao($url);
+				$consulta = true;
+			break;			
+			case 56:	
+				$url = "http://www.trt5.jus.br/default.asp?pagina=consultaDeProcesso";
+				$resultado = $this->consultaTRT5Regiao($url);
+				$consulta = true;
+			break;			
+			case 57:	
+				$url = "http://www.trt6.jus.br/portal/";
+				$resultado = $this->consultaTRT6Regiao($url);
+				$consulta = true;
+			break;			
+			case 58:	
+				$url = "http://www.trt7.gov.br/";
+				$resultado = $this->consultaTRT7Regiao($url);
+				$consulta = true;
+			break;
+			case 59:	
+				$url = "http://www2.trt8.jus.br/consultaprocesso/formulario/frset_index.aspx";
+				$resultado = $this->consultaTRT8Regiao($url);
+				$consulta = true;
+			break;			
+		}
+
+		if(!$consulta)
+		{
+			$resultado .= "Nenhum processo encontrado";
+		}
+		
+		echo $resultado;			
+	  }
+
+	  protected function consultaTRT1Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por nome
+	  }
+
+	  protected function consultaTRT2Regiao($url, $cnpj)
+	  {
+		$resultado = "";
+	  
+		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium->start();
+		$selenium->open($url);
+		$selenium->windowMaximize();
+		$selenium->waitForPageToLoad("10000");
+		
+		$selenium->type("id=cnpj", $cnpj);
+		$selenium->click("id=submit");
+		$selenium->waitForPageToLoad("10000");
+		
+		$resultado .= $selenium->getHtmlSource();
+				
+		/*$resultado .= "<table><tr><th>Nome</th><th>Processo</th><th>Vara</th></tr>";
+		
+		for($i=0; $i < 25; $i++)
+		{
+			$nome     = $selenium->getTable("id=partes.".$i.".0");
+			$processo = $selenium->getTable("id=partes.".$i.".1");
+			$vara	  = $selenium->getTable("id=partes.".$i.".2");
+
+			$resultado .= "<tr><td>".$nome."</td><td>".$processo."</td><td>".$vara."</td></tr>";
+		}
+		
+		$resultado .= "</table>";*/
+		
+		$selenium->stop();
+		$selenium->close();	
+
+		return $resultado;
+	  }
+
+	  protected function consultaTRT3Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo ou OAB
+	  }
+
+	  protected function consultaTRT4Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo ou OAB
 	  }	 	  
+
+	  protected function consultaTRT5Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo ou OAB
+	  }	  
+
+	  protected function consultaTRT6Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT7Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT8Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }	  
 	}		  	
 ?>

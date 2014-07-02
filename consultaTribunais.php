@@ -25,7 +25,14 @@
 						<th>Tribunal</th>
 						<th>Resultado</th>
 					</tr>
-				</table>				
+				</table>
+				<h2>Tribunais Regionais do Trabalho</h2>
+				<table id="tabelaTrabalho">
+					<tr>
+						<th>Tribunal</th>
+						<th>Resultado</th>
+					</tr>
+				</table>					
 			</div>
 			
 			<script type="text/javascript">

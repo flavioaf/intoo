@@ -24,8 +24,9 @@ function criaRequisicao()
 
 function pegaDados() 
 { 
-	var uf;
-	var estado;
+	var uf = "";
+	var estado = "";
+	var regiao = 0;
 	tabela = "";
 	
 	switch(numero)
@@ -233,7 +234,31 @@ function pegaDados()
 		case 51:
 			uf = "SP";
 			estado = "S&atilde;o Paulo";
+		break;
+		case 52:
+			regiao = 1;
+		break;
+		case 53:
+			regiao = 2;
+		break;
+		case 54:
+			regiao = 3;
 		break;		
+		case 55:
+			regiao = 4;
+		break;		
+		case 56:
+			regiao = 5;
+		break;		
+		case 57:
+			regiao = 6;
+		break;		
+		case 58:
+			regiao = 7;
+		break;		
+		case 59:
+			regiao = 8;
+		break;				
 	}
 	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
@@ -245,13 +270,18 @@ function pegaDados()
 		document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;	
 		tabela += "<tr><td class='tdEstado'>Tribunal Federal do " + estado + "</td>";
 	}
-	else
+	if(numero > 27 && numero < 52)
 	{
 		document.getElementById("info").innerHTML = "Consultando Tribunal de Justi&ccedil;a do " + estado;	
 		tabela += "<tr><td class='tdEstado'>Tribunal de Justi&ccedil;a do " + estado + "</td>";
 	}
+	if(numero >= 52)
+	{
+		document.getElementById("info").innerHTML = "Consultando "+ regiao +"&ordm; Tribunal Regional do Trabalho";	
+		tabela += "<tr><td class='tdEstado'>"+ regiao +"&ordm; Tribunal Regional do Trabalho</td>";
+	}	
 		
-	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
+	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero+"&regiao="+regiao; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPagina; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
@@ -284,12 +314,16 @@ function atualizaPagina()
 			{
 				document.getElementById("tabelaFederais").innerHTML += tabela;		
 			}
-			else
+			if(numero > 28 && numero < 53)
 			{
 				document.getElementById("tabelaJustica").innerHTML += tabela;
 			}
+			if(numero >= 53)
+			{
+				document.getElementById("tabelaTrabalho").innerHTML += tabela;
+			}
 			
-			if(numero <= 51)
+			if(numero < 60)
 			{
 				pegaDados();
 			}

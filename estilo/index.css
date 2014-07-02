@@ -62,6 +62,10 @@ td.impar{
 	color:white;
 }
 
+#conteudoPrincipal{
+	background-color: #013b51 !important;
+}
+
 .clear{
 	clear:both;
 }
