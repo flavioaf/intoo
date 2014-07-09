@@ -2,18 +2,18 @@ input[type=text]{
 	width:50%;
 	height:25px;
 	margin-top:10px;
-	border:2px solid #006f9a;
+	border:2px solid #619b41;
 	color:black !important;
 }
 
 textarea{
-	border:2px solid #f5989d;
+	border:2px solid #619b41;
 }
 
 input[type=submit]{
 	margin-top:10px;
 	padding:5px 25px 5px 25px;
-	background-color:#006f9a;
+	background-color:#619b41;
 	color:white;
 }
 

@@ -9,9 +9,11 @@
 	//-->
 	</script>
 	
-	<div id="site">
+	<div id="site" class="index">
 		<div id="topo">
-			<h2>Intoo - Consulta de Processos</h2>
+			<div id="logo">
+				<img src="./estilo/images/logo-intoo.png" width="150" />
+			</div>
 		</div>
 		<div id="meio">		
 			<fieldset>

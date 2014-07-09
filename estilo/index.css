@@ -4,11 +4,17 @@
 }	
 
 body{
-	background-color:#006f9a;
+	background-color:#ffffff;
+}
+
+#site{
+	margin-top:-15px;
 }
 
 #topo{
-	margin:25px 0px;
+	background-image:url(images/banner_topo.png);
+	height:100px;
+	background-repeat:no-repeat;
 }
 
 h2{
@@ -16,19 +22,43 @@ h2{
 	margin-left:5%;
 }
 
+#logo{
+	width:150px;
+	margin-left:100px;
+	padding:15px;
+	background-color:#ffffff;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+}
+
 #meio{
 	padding:15px;
-	margin-top:25px;
-	margin-left:5%;
-	margin-right:5%;
-	background-color:#013b51;
+	padding-top:50px;
+	margin:auto;
+	margin-top:-40px !important;
+	background-color:#959595;
 	color:white;
+	width:96.5%;
+	position:absolute;
+	z-index:-1;
 }
 
 #meio #imagem{
 	position:absolute;
 	margin-top:-60px;
 	margin-left:50%;
+}
+
+.index #meio{
+	width:75%;
+	margin-left:10%;	
+	padding-bottom:25px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;	
+}
+
+.resultados #meio{
+	min-height:800px;
 }
 
 table{
@@ -41,7 +71,7 @@ table{
 }
 
 table th{
-	background-color:#006f9a;
+	background-color:#619b41;
 }
 
 table td.tdEstado{
@@ -50,6 +80,7 @@ table td.tdEstado{
 
 table td.tdTabela{
 	border:1px solid white;
+	padding:5px;
 }
 
 td.par{
@@ -58,12 +89,27 @@ td.par{
 }
 
 td.impar{
-	background-color: #006f9a;
+	background-color: #619b41;
 	color:white;
 }
 
+.mini-tabela th{
+	background-color:#619b41;
+	color:white;
+}
+
+.mini-tabela td{
+	background-color: #e9e9e9;
+	color:black;
+}
+
 #conteudoPrincipal{
-	background-color: #013b51 !important;
+	background-color: #619b41 !important;
+}
+
+#container{
+	margin-top:-25px;
+	color:black !important;
 }
 
 .clear{

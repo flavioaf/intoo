@@ -4,8 +4,12 @@
 	$cnpj = $_POST['cnpj'];
 	$cnpj = tiraPontuacao($cnpj);
 ?>
-	<div id="site">
-		<div id="topo"></div>
+	<div id="site" class="resultados">
+		<div id="topo">
+			<div id="logo">
+				<img src="./estilo/images/logo-intoo.png" width="150" />
+			</div>
+		</div>
 		<div id="meio">
 			<div id="info" class="info">Consultando Tribunais Federais...</div>			
 			<div id="imagem"><img id="carregando" src="./estilo/images/ajax-loader-2.gif" width="75" /></div>

@@ -258,7 +258,31 @@ function pegaDados()
 		break;		
 		case 59:
 			regiao = 8;
-		break;				
+		break;
+		case 60:
+			regiao = 9;
+		break;	
+		case 61:
+			regiao = 10;
+		break;	
+		case 62:
+			regiao = 11;
+		break;	
+		case 63:
+			regiao = 12;
+		break;	
+		case 64:
+			regiao = 13;
+		break;	
+		case 65:
+			regiao = 14;
+		break;	
+		case 66:
+			regiao = 15;
+		break;
+		case 67:
+			regiao = 16;
+		break;		
 	}
 	
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
@@ -323,7 +347,7 @@ function atualizaPagina()
 				document.getElementById("tabelaTrabalho").innerHTML += tabela;
 			}
 			
-			if(numero < 60)
+			if(numero < 68)
 			{
 				pegaDados();
 			}

@@ -72,24 +72,64 @@
 		$selenium2->waitForPageToLoad("40000");
 		$textoCaptcha = $selenium2->getText("css=td");			
 
-		$selenium1->type("trf1_captcha", $textoCaptcha);
-		$selenium1->click("id=enviar");
-		$selenium1->waitForPageToLoad("10000");
-		
-		$texto = $selenium1->getText("css=div.flash.error");
-		
-		if($texto == "OR: Element css=div.flash.error not found")
+		if($textoCaptcha == "OR: Element css=td not found")
 		{
-			$numeroProcessos = $selenium1->getText("css=td.span-2");
-			$nomeParte = $selenium1->getText("css=a.listar-processo");
-			
-			$texto = $numeroProcessos . " processos , " . $nomeParte;
-			// Buscar mais campos posteriormente
+			$texto = "Falha ao resolver o captcha!";
 		}
 		else
 		{
-			$frases = explode(".", $texto);
-			$texto = $frases[0];
+			$selenium1->type("trf1_captcha", $textoCaptcha);
+			$selenium1->click("id=enviar");
+			$selenium1->waitForPageToLoad("10000");
+			
+			$texto = $selenium1->getText("css=div.flash.error");
+			
+			if($texto == "OR: Element css=div.flash.error not found")
+			{
+				$numeroProcessos = (int)$selenium1->getText("css=td.span-2");
+				$nomeParte = $selenium1->getText("css=a.listar-processo");	
+
+				if($nomeParte == "OR: Element css=a.listar-processo not found")
+				{
+					$texto = "Nenhum registro encontrado para o CPF/CNPJ informado:[cnpj: ".$cnpj.", mostrar processos baixados: Sim]";
+				}
+				else
+				{
+					if($numeroProcessos > 1)
+					{
+						$plural = "s";
+					}
+					else
+					{
+						$plural = "";
+					}
+				
+					$texto = $numeroProcessos . " processo".$plural." , " . $nomeParte . "<br/>";
+					
+					$selenium1->click("css=a.listar-processo");
+					$selenium1->waitForFrameToLoad("css=div.lista-processo", 2000);
+					
+					$texto .= "<table class='mini-tabela'><tr><th>N&uacute;mero novo</th><th>N&uacute;mero antigo</th><th>Classe</th><th>Descri&ccedil;&atilde;o da Classe</th></tr>";
+					
+					for($i=0; $i < $numeroProcessos; $i++)
+					{
+						$row = $i + 1;
+						$numeroNovo   = $selenium1->getTable("css=div.lista-processo > table.".$row.".0");
+						$numeroAntigo = $selenium1->getTable("css=div.lista-processo > table.".$row.".1");
+						$classe		  = $selenium1->getTable("css=div.lista-processo > table.".$row.".2");
+						$descricao	  = $selenium1->getTable("css=div.lista-processo > table.".$row.".3");
+					
+						$texto .= "<tr><td>".$numeroNovo."</td><td>".$numeroAntigo."</td><td>".$classe."</td><td>".$descricao."</td></tr>";
+					}
+					
+					$texto .= "</table>";
+				}
+			}
+			else
+			{
+				$frases = explode(".", $texto);
+				$texto = $frases[0];
+			}
 		}
 		
 		$selenium1->stop();
@@ -140,7 +180,13 @@
 		if($resultado == "OR: Element css=font.alerta not found")
 		{			
 			$selenium->selectFrame("name=Pessoas");
-			$resultado = "Processos encontrados!<br/>" . $selenium->getText("css=table");		
+			$resultado = "Processos encontrados!<br/>";		
+			
+			for($i=0; $i < 3; $i++)
+			{
+				$j = $i + 3;
+				$resultado .= $selenium->getText("//form[@id='ResConsPessDados']/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[".$j."]/td/p") . "<br/>";
+			}
 		}
 		
 		echo $resultado;
@@ -177,6 +223,32 @@
 		$selenium->waitForFrameToLoad("name=consulta",10000);	
 		$selenium->selectFrame("name=consulta");			
 		$resultado = $selenium->getText("css=font");
+		
+		if($resultado != "O Sistema não Encontrou processos que atendam aos critérios informados.")
+		{
+			$palavras = explode(" ", $resultado);
+			$numProcessos = (int)$palavras[3];
+			
+			if($numProcessos > 0)
+			{			
+				$resultado .= "<table class='mini-tabela'><tr><th>Processo</th><th>Classe</th><th>Secretaria</th><th>Situa&ccedil;&atilde;o</th><th>Numera&ccedil;&atilde;o antiga</th><th>Localiza&ccedil;&atilde;o</th></tr>";
+				
+				for($i=0; $i < $numProcessos; $i++)
+				{
+					$row = $i + 1;
+					$processo    = $selenium->getTable("css=table.".$row.".0");
+					$classe	     = $selenium->getTable("css=table.".$row.".1");
+					$secretaria  = $selenium->getTable("css=table.".$row.".2");
+					$situacao	 = $selenium->getTable("css=table.".$row.".3");
+					$numAntiga	 = $selenium->getTable("css=table.".$row.".4");
+					$localizacao = $selenium->getTable("css=table.".$row.".5");
+				
+					$resultado .= "<tr><td>".$processo."</td><td>".$classe."</td><td>".$secretaria."</td><td>".$situacao."</td><td>".$numAntiga."</td><td>".$localizacao."</td></tr>";
+				}
+				
+				$resultado .= "</table>";			
+			}
+		}
 		
 		echo $resultado;
 		
@@ -615,9 +687,7 @@
 		$selenium2->click("name=submit");
 		$selenium2->waitForPageToLoad("40000");
 		$textoCaptcha = $selenium2->getText("css=td");
-		
-		echo "Captcha: " . $textoCaptcha . "<br/>";
-		
+
 		$selenium1->type("id=fPP:j_id113:verifyCaptcha", $textoCaptcha);
 		$selenium1->click("id=fPP:searchProcessos");
 		$selenium1->waitForPageToLoad("10000");
@@ -729,8 +799,6 @@
 		$selenium2->click("name=submit");
 		$selenium2->waitForPageToLoad("40000");
 		$textoCaptcha = $selenium2->getText("css=td");
-
-		echo "Captcha: " . $textoCaptcha . "<br/>";
 		
 		$selenium1->type("id=CaptchaBox6", $textoCaptcha);
 		$selenium1->click("css=input.input_02");
@@ -891,6 +959,46 @@
 				$resultado = $this->consultaTRT8Regiao($url);
 				$consulta = true;
 			break;			
+			case 60:	
+				$url = "http://www.trt9.jus.br/internet_base/pagina_geral.do?secao=46&pagina=INICIAL";
+				$resultado = $this->consultaTRT9Regiao($url);
+				$consulta = true;
+			break;
+			case 61:	
+				$url = "http://pje.trt10.jus.br/primeirograu/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTRT10Regiao($url);
+				$consulta = true;
+			break;		
+			case 62:	
+				$url = "http://pje.trt11.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
+				$resultado = $this->consultaTRT11Regiao($url);
+				$consulta = true;
+			break;
+			case 63:	
+				$url = "https://pje.trt12.jus.br/primeirograu/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTRT12Regiao($url);
+				$consulta = true;
+			break;
+			case 64:	
+				$url = "https://www.trt13.jus.br/portalservicos/consulta/informarProcesso.jsf";
+				$resultado = $this->consultaTRT13Regiao($url);
+				$consulta = true;
+			break;
+			case 65:	
+				$url = "http://pje.trt14.jus.br/primeirograu/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTRT14Regiao($url);
+				$consulta = true;
+			break;	
+			case 66:	
+				$url = "https://pje.trt15.jus.br/primeirograu/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTRT15Regiao($url);
+				$consulta = true;
+			break;
+			case 67:	
+				$url = "http://pje.trt16.jus.br/primeirograu/ConsultaPublica/listView.seam";
+				$resultado = $this->consultaTRT15Regiao($url);
+				$consulta = true;
+			break;				
 		}
 
 		if(!$consulta)
@@ -922,19 +1030,6 @@
 		$selenium->waitForPageToLoad("10000");
 		
 		$resultado .= $selenium->getHtmlSource();
-				
-		/*$resultado .= "<table><tr><th>Nome</th><th>Processo</th><th>Vara</th></tr>";
-		
-		for($i=0; $i < 25; $i++)
-		{
-			$nome     = $selenium->getTable("id=partes.".$i.".0");
-			$processo = $selenium->getTable("id=partes.".$i.".1");
-			$vara	  = $selenium->getTable("id=partes.".$i.".2");
-
-			$resultado .= "<tr><td>".$nome."</td><td>".$processo."</td><td>".$vara."</td></tr>";
-		}
-		
-		$resultado .= "</table>";*/
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -977,5 +1072,53 @@
 		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
 		//Consulta por número do processo
 	  }	  
+	  
+	  protected function consultaTRT9Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }		 
+
+	  protected function consultaTRT10Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }		  
+	  
+	  protected function consultaTRT11Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT12Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }		  
+	  
+	  protected function consultaTRT13Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT14Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT15Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }
+
+	  protected function consultaTRT16Regiao($url)
+	  {
+		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		//Consulta por número do processo
+	  }		  
 	}		  	
 ?>
