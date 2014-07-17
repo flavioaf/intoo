@@ -88,6 +88,10 @@ td.par{
 	color:black;
 }
 
+td.par h4, td.par b{
+	color:black;
+}
+
 td.impar{
 	background-color: #619b41;
 	color:white;

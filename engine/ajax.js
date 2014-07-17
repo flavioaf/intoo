@@ -282,6 +282,30 @@ function pegaDados()
 		break;
 		case 67:
 			regiao = 16;
+		break;
+		case 68:
+			regiao = 17;
+		break;
+		case 69:
+			regiao = 18;
+		break;
+		case 70:
+			regiao = 19;
+		break;
+		case 71:
+			regiao = 20;
+		break;
+		case 72:
+			regiao = 21;
+		break;
+		case 73:
+			regiao = 22;
+		break;
+		case 74:
+			regiao = 23;
+		break;
+		case 75:
+			regiao = 24;
 		break;		
 	}
 	
@@ -347,7 +371,7 @@ function atualizaPagina()
 				document.getElementById("tabelaTrabalho").innerHTML += tabela;
 			}
 			
-			if(numero < 68)
+			if(numero <= 75)
 			{
 				pegaDados();
 			}
