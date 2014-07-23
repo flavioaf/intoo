@@ -336,6 +336,65 @@ function pegaDados()
 	request.send(null); //Envia nulo para o servidor para indicar que a requisição terminou.		
 }
 
+function pegaDadosNadaConsta() 
+{ 
+	var uf = "";
+	var estado = "";
+	tabela = "";	
+	
+	switch(numero)
+	{
+		case 1:
+			uf = "AC";
+			estado = "Acre";
+		break;
+		case 2:
+			uf = "AP";
+			estado = "Amap&aacute;";
+		break;
+		case 3:
+			uf = "AM";
+			estado = "Amazonas";
+		break;
+		case 4:
+			uf = "BA";
+			estado = "Bahia";
+		break;
+		case 5:
+			uf = "DF";
+			estado = "Distrito Federal";
+		break;		
+		case 6:
+			uf = "GO";
+			estado = "Goi&aacute;s";
+		break;		
+		case 7:
+			uf = "MA";
+			estado = "Maranh&atilde;o";
+		break;			
+		case 8:
+			uf = "MT";
+			estado = "Mato Grosso";
+		break;	
+		case 9:
+			uf = "MG";
+			estado = "Minas Gerais";
+		break;
+	}
+
+	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.	
+	cnpj = document.getElementById("cnpj").value;
+	
+	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;	
+	tabela += "<tr><td class='tdEstado'>Tribunal Federal do " + estado + "</td>";
+	
+	var url = "chamadaNadaConsta.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
+	
+	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
+	request.onreadystatechange = atualizaPaginaNadaConsta; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
+	request.send(null); //Envia nulo para o servidor para indicar que a requisição terminou.		
+}
+
 function atualizaPagina() 
 { 
 	var cor;	
@@ -374,6 +433,42 @@ function atualizaPagina()
 			if(numero <= 75)
 			{
 				pegaDados();
+			}
+			else
+			{
+				document.getElementById("info").innerHTML = "Consulta conclu&iacute;da!";
+				document.getElementById("imagem").innerHTML = "<img id='carregando' src='./estilo/images/success_512.png' width='75' height='75' />";		
+			}
+		}				
+	}
+}
+
+function atualizaPaginaNadaConsta() 
+{ 
+	var cor;	
+
+	if (request.readyState == 4) 
+	{ 
+		numero++;
+		var texto = request.responseText;			
+		
+		if(texto != "")
+		{
+			if(numero%2 == 0)
+			{
+				cor = "par";
+			}
+			else
+			{
+				cor = "impar";
+			}
+		
+			tabela += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";
+			document.getElementById("tabelaFederais").innerHTML += tabela;		
+			
+			if(numero <= 9)
+			{
+				pegaDadosNadaConsta();
 			}
 			else
 			{
