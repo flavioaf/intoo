@@ -113,19 +113,18 @@
 		$selenium2->waitForPageToLoad("40000");
 		$textoCaptcha = $selenium2->getText("css=td");
 		
-		$selenium1->type("id=num_seguranca", $textoCaptcha);
-		
-		$selenium1->click('css=input[type="button"]');
-		$selenium1->click("name=botao");
+		$selenium1->type("id=num_seguranca", $textoCaptcha);		
+		//$selenium1->click('css=input[type="button"]');
+		//$selenium1->waitForCondition("selenium.browserbot.getCurrentWindow()","10000");
 		
 		$resultado = "Nada consta emitido e aberto em outra janela.";
 			
 		$selenium1->stop();
 		$selenium1->close();
 		$selenium2->stop();
-		$selenium2->close();		
+		$selenium2->close();
 		
 		echo utf8_decode($resultado);		  
-	  }	  
+	  }
 	}		  	
 ?>
