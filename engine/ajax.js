@@ -380,15 +380,52 @@ function pegaDadosNadaConsta()
 			uf = "MG";
 			estado = "Minas Gerais";
 		break;
+		case 10:
+			uf = "PA";
+			estado = "Par&aacute;";
+		break;		
+		case 11:
+			uf = "PI";
+			estado = "Piau&iacute;";
+		break;	
+		case 12:
+			uf = "RO";
+			estado = "Rond&ocirc;nia";
+		break;	
+		case 13:
+			uf = "RR";
+			estado = "Roraima";
+		break;	
+		case 14:
+			uf = "TO";
+			estado = "Tocantins";
+		break;	
+		case 15:
+			uf = "ES";
+			estado = "Esp&iacute;rito Santo";
+		break;	
+		case 16:
+			uf = "RJ";
+			estado = "Rio de Janeiro";
+		break;		
+		case 17:
+			uf = "MS";
+			estado = "Mato Grosso do Sul";
+		break;
+		case 18:
+			uf = "SP";
+			estado = "S&atilde;o Paulo";
+		break;		
 	}
 
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.	
+	nome = document.getElementById("nome").value;
 	cnpj = document.getElementById("cnpj").value;
 	
 	document.getElementById("info").innerHTML = "Consultando Tribunal Federal do " + estado;	
 	tabela += "<tr><td class='tdEstado'>Tribunal Federal do " + estado + "</td>";
 	
-	var url = "chamadaNadaConsta.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
+	var url = "chamadaNadaConsta.php?nome="+nome+"&cnpj="+cnpj+"&uf="+uf+"&numero="+numero; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPaginaNadaConsta; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.
@@ -466,7 +503,7 @@ function atualizaPaginaNadaConsta()
 			tabela += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";
 			document.getElementById("tabelaFederais").innerHTML += tabela;		
 			
-			if(numero <= 9)
+			if(numero <= 18)
 			{
 				pegaDadosNadaConsta();
 			}

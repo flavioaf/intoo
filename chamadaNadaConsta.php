@@ -3,5 +3,5 @@
 	extract($_GET);
 	
 	$nadaConsta = new NadaConsta();
-	$nadaConsta->setUp($uf, $cnpj, $numero);	
+	$nadaConsta->setUp($uf, $cnpj, $numero, $nome);	
 ?>

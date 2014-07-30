@@ -1,6 +1,7 @@
 <?php
 	require("./template/layoutUp.php");
 	
+	$nome = $_POST['nome'];
 	$cnpj = $_POST['cnpj'];
 	$cnpj = tiraPontuacao($cnpj);
 ?>
@@ -13,6 +14,7 @@
 		<div id="meio">
 			<div id="info" class="info">Consultando os Nada Consta...</div>			
 			<div id="imagem"><img id="carregando" src="./estilo/images/ajax-loader-2.gif" width="75" /></div>
+			<input type="hidden" id="nome" name="nome" value="<?php echo $nome; ?>" />			
 			<input type="hidden" id="cnpj" name="cnpj" value="<?php echo $cnpj; ?>" />			
 			<div id="resultado">
 				<h2>Tribunais Federais</h2>

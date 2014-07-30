@@ -278,7 +278,7 @@
 		$selenium1->start();
 		$selenium1->open($url);
 		$selenium1->windowMaximize();
-		$selenium1->waitForPageToLoad("10000");
+		$selenium1->waitForPageToLoad("20000");
 		
 		if($uf != "SC")
 		{
@@ -287,7 +287,7 @@
 			$selenium1->click("id=chkMostrarBaixados");		
 			$selenium1->click("id=botaoEnviar");		
 			
-			$selenium1->waitForPageToLoad("10000");		
+			$selenium1->waitForPageToLoad("20000");		
 		
 			$srcCaptcha = $selenium1->getAttribute($referenciaImg."@src");		
 			$arrCaptcha = explode("=", $srcCaptcha);
@@ -296,8 +296,14 @@
 			$selenium1->type("name=txtPalavraGerada", $captcha);
 			$selenium1->click("css=input.botao");	
 			
-			$selenium1->waitForPageToLoad("10000");			
+			$selenium1->waitForPageToLoad("20000");			
 			$resultado = $selenium1->getText("id=areaResultadoAcompanhamento");
+			$arrResultado = explode(" ", $resultado);
+			
+			if($arrResultado[0] == "OR:")
+			{
+				$resultado = "Nenhum processo encontrado para o CNPJ ". $cnpj;
+			}
 			
 			$selenium1->stop();
 			$selenium1->close();	
@@ -329,7 +335,13 @@
 			
 			$selenium1->type("name=txtPalavraGerada",$textoCaptcha);
 			$selenium1->waitForPageToLoad("10000");			
-			$resultado = $selenium1->getText("id=divConteudo");
+			$resultado = $selenium1->getText("id=divConteudo");			
+			$arrResultado = explode(" ", $resultado);
+			
+			if($arrResultado[0] == "OR:")
+			{
+				$resultado = "Nenhum processo encontrado para o CNPJ ". $cnpj;
+			}			
 			
 			$selenium1->stop();
 			$selenium1->close();	
@@ -377,6 +389,12 @@
 		$selenium->waitForPageToLoad("40000");		
 		
 		$resultado = $selenium->getText("//form[@id='ConsProc']/table/tbody/tr/td/table[3]/tbody/tr/td/p/font/span/b");
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:")
+		{
+			$resultado = "Nenhum processo encontrado para o CNPJ ". $cnpj;
+		}			
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -402,7 +420,7 @@
 				$consulta = true;			
 			break;
 			case "AP":
-				$resultado = "http://app.tjap.jus.br/tucujuris/publico/processo/";
+				$url = "http://app.tjap.jus.br/tucujuris/publico/processo/";
 				$resultado = $this->consultaTribunalJusticaAP($url);
 				$consulta = true;
 			break;
@@ -511,20 +529,26 @@
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= "<h4>Dados do Processo</h4>";
-		$resultado .= "<b>Processo:</b> " . $selenium->getText("//table[3]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
-		$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
-		$resultado .= $selenium->getText("//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
-		$resultado .= "<b>Assunto:</b> " . $selenium->getText("xpath=(//span[@id=''])[3]") . "<br/>";
-		$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
-		$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
-		$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
-		$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
-		$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
-		$resultado .= "<h4>Partes do Processo</h4>";
-		$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
-		$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";
-		//Buscar mais campos posteriormente
+		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:")
+		{		
+			$resultado = "";
+			$resultado .= "<h4>Dados do Processo</h4>";
+			$resultado .= "<b>Processo:</b> " . $selenium->getText("//table[3]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
+			$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
+			$resultado .= $selenium->getText("//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
+			$resultado .= "<b>Assunto:</b> " . $selenium->getText("xpath=(//span[@id=''])[3]") . "<br/>";
+			$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
+			$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
+			$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
+			$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
+			$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
+			$resultado .= "<h4>Partes do Processo</h4>";
+			$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
+			$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -545,19 +569,26 @@
 		$selenium->click("css=a.linkProcesso");		
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= "<h4>Dados do Processo</h4>";
-		$resultado .= "<b>Processo:</b> " . $selenium->getText("//td/table[2]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
-		$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
-		$resultado .= $selenium->getText("//td/table[2]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
-		$resultado .= "<b>Assunto:</b> " . $selenium->getText("//td/table[2]/tbody/tr[4]/td[2]") . "<br/>";
-		$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
-		$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
-		$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
-		$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
-		$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
-		$resultado .= "<h4>Partes do Processo</h4>";
-		$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
-		$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";		
+		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:")
+		{
+			$resultado = "";
+			$resultado .= "<h4>Dados do Processo</h4>";
+			$resultado .= "<b>Processo:</b> " . $selenium->getText("//td/table[2]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
+			$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
+			$resultado .= $selenium->getText("//td/table[2]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
+			$resultado .= "<b>Assunto:</b> " . $selenium->getText("//td/table[2]/tbody/tr[4]/td[2]") . "<br/>";
+			$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
+			$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
+			$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
+			$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
+			$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
+			$resultado .= "<h4>Partes do Processo</h4>";
+			$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
+			$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";
+		}		
 		
 		$selenium->stop();
 		$selenium->close();	
