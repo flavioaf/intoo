@@ -416,6 +416,42 @@ function pegaDadosNadaConsta()
 			uf = "SP";
 			estado = "S&atilde;o Paulo";
 		break;		
+		case 19:
+			uf = "PR";
+			estado = "Paran&aacute;";
+		break;
+		case 20:
+			uf = "RS";
+			estado = "Rio Grande do Sul";
+		break;
+		case 21:
+			uf = "SC";
+			estado = "Santa Catarina";
+		break;
+		case 22:
+			uf = "AL";
+			estado = "Alagoas";
+		break;
+		case 23:
+			uf = "CE";
+			estado = "Cear&aacute;";
+		break;
+		case 24:
+			uf = "PB";
+			estado = "Para&iacute;ba";
+		break;
+		case 25:
+			uf = "PE";
+			estado = "Pernambuco";
+		break;		
+		case 26:
+			uf = "RN";
+			estado = "Rio Grande do Norte";
+		break;	
+		case 27:
+			uf = "SE";
+			estado = "Sergipe";
+		break;			
 	}
 
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.	
@@ -503,7 +539,7 @@ function atualizaPaginaNadaConsta()
 			tabela += "<td class='tdTabela "+ cor +"'>" + texto + "</td></tr>";
 			document.getElementById("tabelaFederais").innerHTML += tabela;		
 			
-			if(numero <= 18)
+			if(numero <= 27)
 			{
 				pegaDadosNadaConsta();
 			}
