@@ -744,7 +744,7 @@
 		$qtdProcessos = (int)$arrResultado[0];
 		
 		$resultado = "";
-		$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+		$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/><br/>";
 		
 		$selenium->click("id=processo_1_1_1");
 		$selenium->waitForPageToLoad("1000");
@@ -753,7 +753,7 @@
 		$resultado .= "<b>Processo:</b> " . $selenium->getText("id=i_numeroProcesso14") . "<br/>";		
 		$resultado .= "<b>Data Distribui&ccedil:</b> " . $selenium->getText("id=i_dataDistribuicao") . "<br/>";		
 		$resultado .= "<b>Numeração Única do Processo (CNJ):</b> " . $selenium->getText("id=i_numeroProcesso20") . "<br/>";		
-		$resultado .= "<b>Vara:</b> " . $selenium->getText("id=i_descricaoVara") . "<br/>";		
+		$resultado .= "<b>Vara:</b> " . $selenium->getText("id=i_descricaoVara") . "<br/><br/>";		
 		
 		$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://tjdf19.tjdft.jus.br/cgi-bin/tjcgi1?NXTPGM=tjhtml101&submit=ok&SELECAO=10&CHAVE=".$cnpj."&CIRC=ZZ&CHAVE1=&ORIGEM=INTER'>ver processos</a></b>";		
 		
