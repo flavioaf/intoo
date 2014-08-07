@@ -458,7 +458,7 @@
 			break;	
 			case "MS":
 				$url = "http://www.tjms.jus.br/cpopg5/search.do?cdForo=0&cbPesquisa=DOCPARTE&dePesquisa=".$cnpj."&tipoNuProcesso=SAJ";
-				$resultado = $this->consultaTribunalJusticaMS($url);
+				$resultado = $this->consultaTribunalJusticaMS($url, $cnpj);
 				$consulta = true;
 			break;	
 			case "MT":
@@ -779,7 +779,7 @@
 		
 		$resultado .= $selenium->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div") . "<br/>";	
 		$resultado .= $selenium->getText("css=td > div.ui-dt-c");	
-		//Buscar mais dados posteriormente
+		//Consulta por nome
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -825,6 +825,58 @@
 		$selenium1->waitForPageToLoad("10000");
 		
 		$resultado .= $selenium1->getText("css=span.rich-messages-label");	
+		$arrResultado = explode(" ", $resultado);		
+		
+		if($arrResultado[0] == "OR:") //Encontrou pelo menos um processo
+		{	
+			$resultado = "";
+			$qtdProcessos = (int)$selenium1->getText("//div[@id='fPP:processosTable:j_id138']/div/span");
+
+			if($qtdProcessos > 0)
+			{
+				$resultado .= "<b>Total de registros: ".$qtdProcessos."</b><br/>";
+			
+				$processo = $selenium1->getText("id=fPP:processosTable:350:j_id144");
+				$arrProcesso = explode(" ", $processo);
+
+				if($arrProcesso[0] != "OR:")
+				{			
+					$resultado .= "<b>Processo:</b> " . $processo . "<br/>";
+				}
+				
+				$classe = $selenium1->getText("id=fPP:processosTable:350:j_id147");
+				$arrClasse = explode(" ", $classe);
+
+				if($arrClasse[0] != "OR:")
+				{			
+					$resultado .= "<b>Classe judicial:</b> " . $classe . "<br/>";
+				}		
+
+				$assunto = $selenium1->getText("id=fPP:processosTable:350:j_id150");
+				$arrAssunto = explode(" ", $assunto);
+
+				if($arrAssunto[0] != "OR:")
+				{			
+					$resultado .= "<b>Assunto principal:</b> " . $assunto . "<br/>";
+				}		
+
+				$ultimaMovimentacao = $selenium1->getText("id=fPP:processosTable:350:j_id153");
+				$arrUltimaMovimentacao = explode(" ", $ultimaMovimentacao);
+
+				if($arrUltimaMovimentacao[0] != "OR:")
+				{			
+					$resultado .= "<b>&Uacute;ltima movimenta&ccedil;&atilde;o:</b> " . $ultimaMovimentacao . "<br/>";
+				}
+
+				$partes = $selenium1->getText("id=fPP:processosTable:350:j_id156");
+				$arrPartes = explode(" ", $partes);
+
+				if($arrPartes[0] != "OR:")
+				{			
+					$resultado .= "<b>Partes:</b> " . $partes . "<br/>";
+				}					
+			}
+		}		
 		
 		$selenium1->stop();
 		$selenium1->close();	
@@ -834,7 +886,7 @@
 		return $resultado;
 	  }	  
 	  
-	  protected function consultaTribunalJusticaMS($url)
+	  protected function consultaTribunalJusticaMS($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -868,10 +920,31 @@
 		$selenium1->click("id=pbEnviar");
 		$selenium1->waitForPageToLoad("10000");		
 		
-		$resultado .= "Processo: " . $selenium1->getText("css=a.linkProcesso") . "<br/>";		
-		$resultado .= $selenium1->getText("css=div.espacamentoLinhas") . "<br/>";
-		$resultado .= $selenium1->getText("//div[@id='divProcesso2W0000FZY0000']/div/div[3]") . "<br/>";	
-		// Buscar mais campos posteriormente
+		$resultado .= $selenium1->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
+		{		
+			$paginacao = $selenium1->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium1);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium1->click("class=linkProcesso");
+				$selenium1->waitForPageToLoad("1000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium1) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://www.tjms.jus.br/cpopg5/search.do?cdForo=0&cbPesquisa=DOCPARTE&dePesquisa=".$cnpj."&tipoNuProcesso=SAJ'>ver processos</a></b>";
+			}
+		}
 		
 		$selenium1->stop();
 		$selenium1->close();	
