@@ -242,6 +242,13 @@
 					$situacao	 = $selenium->getTable("css=table.".$row.".3");
 					$numAntiga	 = $selenium->getTable("css=table.".$row.".4");
 					$localizacao = $selenium->getTable("css=table.".$row.".5");
+								
+					$arrLinha = explode(" ", $processo);
+					
+					if($arrLinha[0] == "OR:")
+					{
+						break;
+					}
 				
 					$resultado .= "<tr><td>".$processo."</td><td>".$classe."</td><td>".$secretaria."</td><td>".$situacao."</td><td>".$numAntiga."</td><td>".$localizacao."</td></tr>";
 				}
@@ -411,32 +418,32 @@
 		{
 			case "AC":	
 				$url = "http://esaj.tjac.jus.br/cpo/pg/search.do?paginaConsulta=1&localPesquisa.cdLocal=1&cbPesquisa=DOCPARTE&tipoNuProcesso=SAJ&dePesquisa=".$cnpj."&pbEnviar=Pesquisar";
-				$resultado = $this->consultaTribunalJusticaAC($url);
+				$resultado = $this->consultaTribunalJusticaAC($url, $cnpj);
 				$consulta = true;
 			break;			
 			case "AL":
 				$url = "http://www2.tjal.jus.br/cpopg/search.do;jsessionid=FF1AEA3366DA36C6397FB6CE055C1AE8?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
-				$resultado = $this->consultaTribunalJusticaAL($url);
+				$resultado = $this->consultaTribunalJusticaAL($url, $cnpj);
 				$consulta = true;			
 			break;
 			case "AP":
 				$url = "http://app.tjap.jus.br/tucujuris/publico/processo/";
-				$resultado = $this->consultaTribunalJusticaAP($url);
+				$resultado = $this->consultaTribunalJusticaAP($url, $cnpj);
 				$consulta = true;
 			break;
 			case "BA":
 				$url = "http://esaj.tjba.jus.br/cpopg/search.do;jsessionid=C5B4903AD4877336FB91CFA8FDC68CFF.cpopg2?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
-				$resultado = $this->consultaTribunalJusticaBA($url);
+				$resultado = $this->consultaTribunalJusticaBA($url, $cnpj);
 				$consulta = true;
 			break;		
 			case "CE":
 				$url = "http://esaj.tjce.jus.br/cpopg/search.do;jsessionid=C6F6DE39A53B03910D29330FC252B412.cpos1?conversationId=&dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj;
-				$resultado = $this->consultaTribunalJusticaCE($url);
+				$resultado = $this->consultaTribunalJusticaCE($url, $cnpj);
 				$consulta = true;
 			break;
 			case "DF":
 				$url = "http://tjdf19.tjdft.jus.br/cgi-bin/tjcgi1?NXTPGM=tjhtml101&submit=ok&SELECAO=10&CHAVE=".$cnpj."&CIRC=ZZ&CHAVE1=&ORIGEM=INTER";
-				$resultado = $this->consultaTribunalJusticaDF($url);
+				$resultado = $this->consultaTribunalJusticaDF($url, $cnpj);
 				$consulta = true;
 			break;		
 			case "ES":
@@ -519,7 +526,7 @@
 		echo $resultado;			
 	  }	 
 
-	  protected function consultaTribunalJusticaAC($url)
+	  protected function consultaTribunalJusticaAC($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -528,26 +535,31 @@
 		$selenium->open($url);
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
-		
+			
 		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
 		$arrResultado = explode(" ", $resultado);
 		
-		if($arrResultado[0] == "OR:")
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
 		{		
-			$resultado = "";
-			$resultado .= "<h4>Dados do Processo</h4>";
-			$resultado .= "<b>Processo:</b> " . $selenium->getText("//table[3]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
-			$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
-			$resultado .= $selenium->getText("//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
-			$resultado .= "<b>Assunto:</b> " . $selenium->getText("xpath=(//span[@id=''])[3]") . "<br/>";
-			$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
-			$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
-			$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
-			$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
-			$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
-			$resultado .= "<h4>Partes do Processo</h4>";
-			$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
-			$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";
+			$paginacao = $selenium->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium->click("class=linkProcesso");
+				$selenium->waitForPageToLoad("1000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://esaj.tjac.jus.br/cpo/pg/search.do?paginaConsulta=1&localPesquisa.cdLocal=1&cbPesquisa=DOCPARTE&tipoNuProcesso=SAJ&dePesquisa=".$cnpj."&pbEnviar=Pesquisar'>ver processos</a></b>";
+			}
 		}
 		
 		$selenium->stop();
@@ -556,7 +568,7 @@
 		return $resultado;
 	  }	  	
 
-	  protected function consultaTribunalJusticaAL($url)
+	  protected function consultaTribunalJusticaAL($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -572,23 +584,28 @@
 		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
 		$arrResultado = explode(" ", $resultado);
 		
-		if($arrResultado[0] == "OR:")
-		{
-			$resultado = "";
-			$resultado .= "<h4>Dados do Processo</h4>";
-			$resultado .= "<b>Processo:</b> " . $selenium->getText("//td/table[2]/tbody/tr/td[2]/table/tbody/tr/td/span") . "<br/>";
-			$resultado .= "<b>Classe:</b> " . $selenium->getText("css=span > span") . "<br/>";
-			$resultado .= $selenium->getText("//td/table[2]/tbody/tr[3]/td[2]/table/tbody/tr/td") . "<br/>";
-			$resultado .= "<b>Assunto:</b> " . $selenium->getText("//td/table[2]/tbody/tr[4]/td[2]") . "<br/>";
-			$resultado .= "<b>Local f&iacute;sico:</b> " . $selenium->getText("xpath=(//span[@id=''])[4]") . "<br/>";		
-			$resultado .= "<b>Outros assuntos:</b> " . $selenium->getText("xpath=(//span[@id=''])[5]") . "<br/>";		
-			$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[6]") . "<br/>";		
-			$resultado .= $selenium->getText("xpath=(//span[@id=''])[7]") . "<br/>";		
-			$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $selenium->getText("xpath=(//span[@id=''])[8]") . "<br/>";
-			$resultado .= "<h4>Partes do Processo</h4>";
-			$resultado .= "<b>Requerente:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]") . "<br/>";
-			$resultado .= "<b>Requerido:</b> " . $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]") . "<br/>";
-		}		
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
+		{		
+			$paginacao = $selenium->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium->click("class=linkProcesso");
+				$selenium->waitForPageToLoad("1000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://www2.tjal.jus.br/cpopg/search.do;jsessionid=FF1AEA3366DA36C6397FB6CE055C1AE8?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj."'>ver processos</a></b>";
+			}
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -596,12 +613,13 @@
 		return $resultado;
 	  }
 
-	  protected function consultaTribunalJusticaAP($url)
+	  protected function consultaTribunalJusticaAP($url, $cnpj)
 	  {
-		echo "Voc&ecirc; precisa informar pelo menos um sobrenome da parte para realizar a consulta.";
+		echo "Não existem informações disponíveis para os parâmetros informados.";
+		//Busca por nome
 	  }
 	  
-	  protected function consultaTribunalJusticaBA($url)
+	  protected function consultaTribunalJusticaBA($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -635,10 +653,31 @@
 		$selenium1->click("id=pbEnviar");
 		$selenium1->waitForPageToLoad("10000");		
 		
-		$resultado .= "Processo: " . $selenium1->getText("css=a.linkProcesso") . "<br/>";		
-		$resultado .= $selenium1->getText("css=div.espacamentoLinhas") . "<br/>";
-		$resultado .= $selenium1->getText("//div[@id='divProcesso0100010S60000']/div/div[3]") . "<br/>";	
-		// Buscar mais campos posteriormente
+		$resultado .= $selenium1->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
+		{		
+			$paginacao = $selenium1->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium1);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium1->click("class=linkProcesso");
+				$selenium1->waitForPageToLoad("1000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium1) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://esaj.tjba.jus.br/cpopg/search.do;jsessionid=C5B4903AD4877336FB91CFA8FDC68CFF.cpopg2?dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj."'>ver processos</a></b>";
+			}
+		}
 		
 		$selenium1->stop();
 		$selenium1->close();	
@@ -648,7 +687,7 @@
 		return $resultado;
 	  }
 
-	  protected function consultaTribunalJusticaCE($url)
+	  protected function consultaTribunalJusticaCE($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -658,10 +697,31 @@
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= "Processo: " . $selenium->getText("css=a.linkProcesso") . "<br/>";		
-		$resultado .= $selenium->getText("css=div.espacamentoLinhas") . "<br/>";
-		$resultado .= $selenium->getText("//div[@id='divProcesso010007GNR0000']/div/div[3]") . "<br/>";	
-		//Buscar mais campos posteriormente
+		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
+		
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
+		{		
+			$paginacao = $selenium->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium->click("class=linkProcesso");
+				$selenium->waitForPageToLoad("1000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://esaj.tjce.jus.br/cpopg/search.do;jsessionid=C6F6DE39A53B03910D29330FC252B412.cpos1?conversationId=&dadosConsulta.localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&dadosConsulta.tipoNuProcesso=UNIFICADO&dadosConsulta.valorConsulta=".$cnpj."'>ver processos</a></b>";
+			}
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -669,7 +729,7 @@
 		return $resultado;
 	  }		
 	  
-	  protected function consultaTribunalJusticaDF($url)
+	  protected function consultaTribunalJusticaDF($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -680,7 +740,22 @@
 		$selenium->waitForPageToLoad("10000");
 		
 		$resultado .= $selenium->getText("css=font");	
-		//Buscar mais dados posteriormente
+		$arrResultado = explode(" ", $resultado);
+		$qtdProcessos = (int)$arrResultado[0];
+		
+		$resultado = "";
+		$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+		
+		$selenium->click("id=processo_1_1_1");
+		$selenium->waitForPageToLoad("1000");
+		
+		$resultado .= "<b>Circunscri&ccedil;&atilde;o:</b> " . $selenium->getText("id=i_nomeCircunscricao") . "<br/>";	
+		$resultado .= "<b>Processo:</b> " . $selenium->getText("id=i_numeroProcesso14") . "<br/>";		
+		$resultado .= "<b>Data Distribui&ccedil:</b> " . $selenium->getText("id=i_dataDistribuicao") . "<br/>";		
+		$resultado .= "<b>Numeração Única do Processo (CNJ):</b> " . $selenium->getText("id=i_numeroProcesso20") . "<br/>";		
+		$resultado .= "<b>Vara:</b> " . $selenium->getText("id=i_descricaoVara") . "<br/>";		
+		
+		$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://tjdf19.tjdft.jus.br/cgi-bin/tjcgi1?NXTPGM=tjhtml101&submit=ok&SELECAO=10&CHAVE=".$cnpj."&CIRC=ZZ&CHAVE1=&ORIGEM=INTER'>ver processos</a></b>";		
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -1264,6 +1339,104 @@
 	  {
 		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
 		//Consulta por número do processo
+	  }
+
+	  protected function buscarProcessoESAJ($selenium)
+	  {
+		$resultado = "";
+		$resultado .= "<h4>Dados do Processo</h4>";
+		
+		$processo = $selenium->getText("//table[3]/tbody/tr/td[2]/table/tbody/tr/td/span");	
+		$arrProcesso = explode(" ", $processo);
+		
+		if($arrProcesso[0] != "OR:")
+		{
+			$resultado .= "<b>Processo:</b> " . $processo . "<br/>";
+		}
+
+		$classe = $selenium->getText("css=span > span");			
+		$arrClasse = explode(" ", $classe);
+		
+		if($arrClasse[0] != "OR:")
+		{
+			$resultado .= "<b>Classe:</b> " . $classe . "<br/>";
+		}
+
+		$area = $selenium->getText("//table[3]/tbody/tr[3]/td[2]/table/tbody/tr/td");
+		$arrArea = explode(" ", $area);
+		
+		if($arrArea[0] != "OR:")
+		{
+			$resultado .= $area . "<br/>";
+		}
+		
+		$assunto = $selenium->getText("xpath=(//span[@id=''])[3]");
+		$arrAssunto = explode(" ", $assunto);
+		
+		if($arrAssunto[0] != "OR:")
+		{
+			$resultado .= "<b>Assunto:</b> " . $assunto . "<br/>";
+		}
+
+		$localFisico = $selenium->getText("xpath=(//span[@id=''])[4]");
+		$arrLocalFisico = explode(" ", $localFisico);
+		
+		if($arrLocalFisico[0] != "OR:")
+		{
+			$resultado .= "<b>Local f&iacute;sico:</b> " . $localFisico . "<br/>";
+		}
+		
+		$outrosAssuntos = $selenium->getText("xpath=(//span[@id=''])[5]");
+		$arrOutrosAssuntos = explode(" ", $outrosAssuntos);
+		
+		if($arrOutrosAssuntos[0] != "OR:")
+		{
+			$resultado .= "<b>Outros assuntos:</b> " . $outrosAssuntos . "<br/>";
+		}
+
+		$distribuicao = $selenium->getText("xpath=(//span[@id=''])[6]");
+		$arrDistribuicao = explode(" ", $distribuicao);
+		
+		if($arrDistribuicao[0] != "OR:")
+		{
+			$resultado .= "<b>Distribui&ccedil;&atilde;o:</b> " . $distribuicao . "<br/>";
+		}
+		
+		$vara = $selenium->getText("xpath=(//span[@id=''])[7]");	
+		$arrVara = explode(" ", $vara);
+		
+		if($arrVara[0] != "OR:")
+		{
+			$resultado .= $vara . "<br/>";
+		}
+		
+		$valor_acao = $selenium->getText("xpath=(//span[@id=''])[8]");
+		$arrValorAcao = explode(" ", $valor_acao);
+		
+		if($arrValorAcao[0] != "OR:")
+		{
+			$resultado .= "<b>Valor da a&ccedil;&atilde;o:</b> " . $valor_acao . "<br/>";
+		}					
+		
+		$resultado .= "<h4>Partes do Processo</h4>";
+		
+		$requerente = $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr/td[2]");
+		$arrRequerente = explode(" ", $requerente);
+		
+		if($arrRequerente[0] != "OR:")
+		{
+			$resultado .= "<b>Requerente:</b> " . $requerente . "<br/>";
+		}			
+		
+		$requerido = $selenium->getText("//table[@id='tablePartesPrincipais']/tbody/tr[2]/td[2]");
+		$arrRequerido = explode(" ", $requerido);
+		
+		if($arrRequerido[0] != "OR:")
+		{
+			$resultado .= "<b>Requerido:</b> " . $requerido . "<br/>";
+		}	
+
+		return $resultado;
 	  }	  
 	}		  	
 ?>

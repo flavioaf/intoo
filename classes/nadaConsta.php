@@ -11,6 +11,8 @@
 	{
 	  public function setUp($uf, $cnpj, $numero, $nome)
 	  {
+		$this->criarDiretorios();
+	  
 		if($numero < 15) //1ª Região
 		{
 			$this->consulta1Regiao($uf, $cnpj, $nome);
@@ -32,6 +34,24 @@
 			$this->consulta5Regiao($uf, $cnpj, $nome);
 		}	
 	  }
+	  
+	  protected function criarDiretorios()
+	  {
+		if(!file_exists("/captchas"))
+		{
+			mkdir("/captchas", 0777);
+		}
+		
+		if(!file_exists("/nada_consta"))
+		{
+			mkdir("/nada_consta", 0777);
+		}		
+		
+		if(!file_exists("/screenshots"))
+		{
+			mkdir("/screenshots", 0777);
+		}		
+	  }	  
 	  
 	  protected function consulta1Regiao($uf, $cnpj, $nome)
 	  {

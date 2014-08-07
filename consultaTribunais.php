@@ -41,7 +41,7 @@
 			
 			<script type="text/javascript">
 			<!--
-				var numero = 1;			
+				var numero = 28;			
 				pegaDados();
 			//-->
 			</script>
