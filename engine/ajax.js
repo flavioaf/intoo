@@ -312,6 +312,8 @@ function pegaDados()
 	criaRequisicao();	//Instancia o objeto que vai estabelecer a requisição assíncrona com o servidor.
 	
 	cnpj = document.getElementById("cnpj").value;
+	nome = document.getElementById("nome").value;
+	processo = document.getElementById("processo").value;
 	
 	if(numero <= 27)
 	{
@@ -329,7 +331,7 @@ function pegaDados()
 		tabela += "<tr><td class='tdEstado'>"+ regiao +"&ordm; Tribunal Regional do Trabalho</td>";
 	}	
 		
-	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero+"&regiao="+regiao; //Escreva aqui o script que vai rodar no servidor.
+	var url = "chamadaSelenium.php?cnpj="+cnpj+"&uf="+uf+"&numero="+numero+"&regiao="+regiao+"&nome="+nome+"&processo="+processo; //Escreva aqui o script que vai rodar no servidor.
 	
 	request.open("GET", url, true); //Esse método abre a requisição com o servidor. Ou seja, faz o seu script php começar a rodar no servidor sem que o usuário veja uma página em branco!
 	request.onreadystatechange = atualizaPagina; //Uma das linhas mais importantes! Chama a função atualizaPagina somente quando a requisição termina de ser processada.

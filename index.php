@@ -5,6 +5,7 @@
 	<!--
 		$(document).ready(function(){
 			$("#cnpj").mask("99.999.999/9999-99");
+			$("#processo").mask("9999999-99.9999.9.99.9999");
 		});
 		
 		function mudaAction()
@@ -15,12 +16,12 @@
 			if(consultaProcessual)
 			{
 				document.getElementById("frmConsulta").action = "consultaTribunais.php";
-				document.getElementById("outrosCampos").innerHTML = "";
+				$("#num_processo").css("display", "block");
 			}
 			if(emitirNadaConsta)
 			{
 				document.getElementById("frmConsulta").action = "emiteNadaConsta.php";
-				document.getElementById("outrosCampos").innerHTML = '<label>Nome: </label><input type="text" id="nome" name="nome" />';
+				$("#num_processo").css("display", "none");
 			}			
 		}
 		
@@ -101,7 +102,9 @@
 					<label for="consultaProcessual">Consulta Processual: </label><input type="radio" id="consultaProcessual" name="consulta" checked="checked" onchange="javascript:mudaAction();" /> <label for="emitirNadaConsta">Emitir Nada Consta: </label><input type="radio" id="emitirNadaConsta" name="consulta" onchange="javascript:mudaAction();" /><br/>
 					<div id="outrosCampos">
 					</div>
-					<label>CNPJ: </label><input type="text" id="cnpj" name="cnpj" />
+					<label>CNPJ: </label><input type="text" id="cnpj" name="cnpj" /> <span class="asterisco">*</span><br/>
+					<label>Nome: </label><input type="text" id="nome" name="nome" /><br/>
+					<div id="num_processo"><label>N&uacute;mero do Processo: </label><input type="text" id="processo" name="processo" /><br/></div>
 					<input type="hidden" id="blnChecaJS" name="blnChecaJS" value="0" />
 					<input type="submit" id="consultar" name="consultar" value="Consultar" onclick="return valida();" />
 				</form>

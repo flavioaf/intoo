@@ -8,7 +8,7 @@
 
 	class ConsultaTribunal extends PHPUnit_Framework_TestCase
 	{
-	  public function setUp($uf, $cnpj, $numero)
+	  public function setUp($uf, $cnpj, $numero, $nome, $processo)
 	  {
 		if($numero < 15) //1ª Região
 		{
@@ -32,7 +32,7 @@
 		}
 		if($numero >= 28 && $numero < 52) //Tribunais de Justiça
 		{
-			$this->consultaTribunaisJustica($uf, $cnpj);
+			$this->consultaTribunaisJustica($uf, $cnpj, $nome, $processo);
 		}
 		if($numero >= 52) //Tribunais Regionais do Trabalho
 		{
@@ -409,7 +409,7 @@
 		echo $resultado;
 	  }	 
 	  
-	  protected function consultaTribunaisJustica($uf, $cnpj)
+	  protected function consultaTribunaisJustica($uf, $cnpj, $nome, $processo)
 	  {
 		$resultado = "";
 		$consulta = false;
@@ -428,7 +428,7 @@
 			break;
 			case "AP":
 				$url = "http://app.tjap.jus.br/tucujuris/publico/processo/";
-				$resultado = $this->consultaTribunalJusticaAP($url, $cnpj);
+				$resultado = $this->consultaTribunalJusticaAP($url, $cnpj, $nome, $processo);
 				$consulta = true;
 			break;
 			case "BA":
@@ -448,7 +448,7 @@
 			break;		
 			case "ES":
 				$url = "http://aplicativos.tjes.jus.br/consultaunificada/faces/pages/pesquisaSimplificada.xhtml";
-				$resultado = $this->consultaTribunalJusticaES($url, $cnpj);
+				$resultado = $this->consultaTribunalJusticaES($url, $cnpj, $nome);
 				$consulta = true;
 			break;	
 			case "MA":
@@ -462,18 +462,18 @@
 				$consulta = true;
 			break;	
 			case "MT":
-				$url = "http://www.tjmt.jus.br/paginas/servicos/ConsultaProcessual/Default.aspx";
-				$resultado = $this->consultaTribunalJusticaMT($url, $cnpj);
+				$url = "http://servicos.tjmt.jus.br/processos/comarcas/consulta.aspx";
+				$resultado = $this->consultaTribunalJusticaMT($url, $cnpj, $nome);
 				$consulta = true;
 			break;		
 			case "PA":
 				$url = "http://wsconsultas.tjpa.jus.br/consultaprocessoportal/consulta/consulta/principal";
-				$resultado = $this->consultaTribunalJusticaPA($url, $cnpj);
+				$resultado = $this->consultaTribunalJusticaPA($url, $cnpj, $nome, $processo);
 				$consulta = true;
 			break;		
 			case "PB":
-				$url = "http://www.tjpb.jus.br/";
-				$resultado = $this->consultaTribunalJusticaPB($url, $cnpj);
+				$url = "http://app.tjpb.jus.br/consultaprocessual2/views/consultarPorParte.jsf";
+				$resultado = $this->consultaTribunalJusticaPB($url, $cnpj, $nome, $processo);
 				$consulta = true;
 			break;	
 			case "PE":
@@ -483,12 +483,12 @@
 			break;		
 			case "PI":
 				$url = "http://www.tjpi.jus.br/themisconsulta/";
-				$resultado = $this->consultaTribunalJusticaPI($url, $cnpj);
+				$resultado = $this->consultaTribunalJusticaPI($url, $cnpj, $nome, $processo);
 				$consulta = true;
 			break;	
 			case "PR":
 				$url = "http://portal.tjpr.jus.br/civel/publico/consulta/processo.do?actionType=iniciar";
-				$resultado = $this->consultaTribunalJusticaPR($url, $cnpj);
+				$resultado = $this->consultaTribunalJusticaPR($url, $cnpj, $nome, $processo);
 				$consulta = true;
 			break;
 			case "RJ":
@@ -613,10 +613,81 @@
 		return $resultado;
 	  }
 
-	  protected function consultaTribunalJusticaAP($url, $cnpj)
+	  protected function consultaTribunalJusticaAP($url, $cnpj, $nome, $processo)
 	  {
-		echo "Não existem informações disponíveis para os parâmetros informados.";
-		//Busca por nome
+		$resultado = "";
+	  
+		if(isset($nome) && $nome != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);	
+			$selenium->waitForPageToLoad("10000");				
+			
+			$selenium->windowMaximize();
+			$selenium->type("id=formConsultaPublica:inputParteNome", $nome);
+			$selenium->click("id=formConsultaPublica:botaoConsultar");
+			$selenium->waitForPageToLoad("10000");	
+			
+			$resultados = $selenium->getText("css=p.help-block");
+			$resultado .= "<b>". $resultados . "</b><br/><br/>";
+			$arrResultados = explode(" ", $resultados);
+			$qtdProcessos = (int)$arrResultados[0];
+			
+			$processo = $selenium->getText("css=h3.pull-left");		
+		
+			if(existeElemento($processo))
+			{			
+				$resultado .= "<b>" . $processo . "</b><br/>";
+			}
+			
+			$vara = $selenium->getText("css=td > span");	
+		
+			if(existeElemento($vara))
+			{
+				$resultado .= $vara . "<br/>";	
+			}
+			
+			$tipo_acao = $selenium->getText("//div[@id='div-resultado']/table/tbody/tr/td/span[2]");	
+		
+			if(existeElemento($tipo_acao))
+			{
+				$resultado .= $tipo_acao . "<br/>";	
+			}					
+
+			$grau = $selenium->getText("//div[@id='div-resultado']/table/tbody/tr/td/span[3]");
+		
+			if(existeElemento($grau))
+			{			
+				$resultado .= $grau . "<br/>";		
+			}
+
+			$parte_autora = $selenium->getText("css=div.parte-nome");
+			$arrParteAutora = explode(" ", $parte_autora);
+		
+			if(existeElemento($parte_autora))	
+			{
+				$resultado .= "Parte autora: " . $parte_autora . "<br/>";	
+			}
+
+			$parte_re = $selenium->getText("//div[@id='div-resultado']/table/tbody/tr/td/span[4]/div/div[2]/div[2]");		
+		
+			if(existeElemento($parte_re))
+			{
+				$resultado .= "Parte r&eacute;: " . $parte_re . "<br/>";
+			}
+
+			$resultado .= "<br/><b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://app.tjap.jus.br/tucujuris/publico/processo/index.xhtml'>ver processos</a></b>";				
+			
+			$selenium->stop();
+			$selenium->close();	
+		}
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte."; 
+		}	
+		
+		return $resultado;
 	  }
 	  
 	  protected function consultaTribunalJusticaBA($url, $cnpj)
@@ -739,9 +810,13 @@
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= $selenium->getText("css=font");	
-		$arrResultado = explode(" ", $resultado);
-		$qtdProcessos = (int)$arrResultado[0];
+		$resultados = $selenium->getText("css=font");
+		if(existeElemento($resultados)) 
+		{
+			$resultado .= $resultados;	
+			$arrResultado = explode(" ", $resultados);
+			$qtdProcessos = (int)$arrResultado[0];
+		}
 		
 		$resultado = "";
 		$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/><br/>";
@@ -749,11 +824,20 @@
 		$selenium->click("id=processo_1_1_1");
 		$selenium->waitForPageToLoad("1000");
 		
-		$resultado .= "<b>Circunscri&ccedil;&atilde;o:</b> " . $selenium->getText("id=i_nomeCircunscricao") . "<br/>";	
-		$resultado .= "<b>Processo:</b> " . $selenium->getText("id=i_numeroProcesso14") . "<br/>";		
-		$resultado .= "<b>Data Distribui&ccedil:</b> " . $selenium->getText("id=i_dataDistribuicao") . "<br/>";		
-		$resultado .= "<b>Numeração Única do Processo (CNJ):</b> " . $selenium->getText("id=i_numeroProcesso20") . "<br/>";		
-		$resultado .= "<b>Vara:</b> " . $selenium->getText("id=i_descricaoVara") . "<br/><br/>";		
+		$circunscricao = $selenium->getText("id=i_nomeCircunscricao");
+		if(existeElemento($circunscricao)) $resultado .= "<b>Circunscri&ccedil;&atilde;o:</b> " . $circunscricao . "<br/>";	
+	
+		$processo = $selenium->getText("id=i_numeroProcesso14");
+		if(existeElemento($processo)) $resultado .= "<b>Processo:</b> " . $processo . "<br/>";		
+		
+		$data_distribuicao = $selenium->getText("id=i_dataDistribuicao");
+		if(existeElemento($data_distribuicao)) $resultado .= "<b>Data Distribui&ccedil:</b> " . $data_distribuicao . "<br/>";	
+
+		$num_processo = $selenium->getText("id=i_numeroProcesso20");
+		if(existeElemento($num_processo)) $resultado .= "<b>Numeração Única do Processo (CNJ):</b> " . $selenium->getText("id=i_numeroProcesso20") . "<br/>";		
+		
+		$vara = $selenium->getText("id=i_descricaoVara");
+		if(existeElemento($vara)) $resultado .= "<b>Vara:</b> " . $vara . "<br/><br/>";		
 		
 		$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://tjdf19.tjdft.jus.br/cgi-bin/tjcgi1?NXTPGM=tjhtml101&submit=ok&SELECAO=10&CHAVE=".$cnpj."&CIRC=ZZ&CHAVE1=&ORIGEM=INTER'>ver processos</a></b>";		
 		
@@ -763,27 +847,67 @@
 		return $resultado;
 	  }	  
 	  
-	  protected function consultaTribunalJusticaES($url, $cnpj)
+	  protected function consultaTribunalJusticaES($url, $cnpj, $nome)
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
-		$selenium->start();
-		$selenium->open($url);
-		$selenium->windowMaximize();
-		$selenium->waitForPageToLoad("10000");
-		
-		$selenium->type("id=txtPesquisaSimplificada", $cnpj);
-		$selenium->click("id=btnRealizarPesquisaSimplificada");
-		$selenium->waitForPageToLoad("10000");
-		
-		$resultado .= $selenium->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div") . "<br/>";	
-		$resultado .= $selenium->getText("css=td > div.ui-dt-c");	
-		//Consulta por nome
-		
-		$selenium->stop();
-		$selenium->close();	
+		if(isset($nome) && $nome != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");
+			
+			$selenium->type("id=txtPesquisaSimplificada", $nome);
+			$selenium->click("id=btnRealizarPesquisaSimplificada");
+			$selenium->waitForPageToLoad("10000");
+			
+			$resultados = $selenium->getText("css=#layoutResultados > div.ui-layout-unit-content.ui-widget-content > div > span");	
+			
+			if(existeElemento($resultados)) 
+			{
+				$resultado .= "<b>" . $resultados . "</b><br/><br/>";
+				
+				$processo = $selenium->getText("css=span.proPesq");
+				if(existeElemento($processo)) $resultado .= "<b>" . $processo . "</b><br/>";
+				
+				$ultimo_andamento = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div/span[2]");
+				if(existeElemento($ultimo_andamento)) $resultado .= "&Uacute;ltimo andamento em " . $ultimo_andamento . "<br/>";
+				
+				$tipo_acao = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div[2]/span[2]");
+				if(existeElemento($tipo_acao)) $resultado .= "<b>A&ccedil;&atilde;o:</b> " . $tipo_acao . "<br/>";
+				
+				$vara = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div[3]/span[2]");
+				if(existeElemento($vara)) $resultado .= "<b>Vara:</b> " . $vara . "<br/>";				
+				
+				$situacao = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div[4]/span[2]");
+				if(existeElemento($situacao)) $resultado .= "<b>Situa&ccedil;&atilde;o: </b> " . $situacao . "<br/>";	
 
+				$peticao_inicial = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div[5]/span[2]");
+				if(existeElemento($peticao_inicial)) $resultado .= "<b>Peti&ccedil;&atilde;o inicial: </b> " . $peticao_inicial . "<br/>";				
+				
+				$requerente = $selenium->getText("css=span.dadosPesq");
+				if(existeElemento($requerente)) $resultado .= "<b>Requerente: </b> " . $requerente . "<br/>";	
+
+				$requerido = $selenium->getText("//tbody[@id='tabelaResultados_data']/tr/td/div/div[7]/span");
+				if(existeElemento($requerido)) $resultado .= "<b>Requerido: </b> " . $requerido . "<br/>";		
+
+				$resultado .= "<br/><b>Para ver os demais processos, clique no link a seguir: <a target='_blank' href='http://aplicativos.tjes.jus.br/consultaunificada/faces/pages/pesquisaSimplificada.xhtml;jsessionid=l6FxTrqHGnyxWF2yJNC3XGJ1p2jg4623pR5b7RjpTPKQ7sns7ZXM!-811950300'>ver processos</a></b>";				
+			}
+			else
+			{
+				$resultado .= "N&atilde;o foram encontrados resultados para os termos pesquisados.";
+			}
+		
+			$selenium->stop();
+			$selenium->close();	
+		}
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte."; 
+		}
+		
 		return $resultado;
 	  }		  
 	  
@@ -954,22 +1078,270 @@
 		return $resultado;
 	  }
 	  
-	  protected function consultaTribunalJusticaMT($url, $cnpj)
+	  protected function consultaTribunalJusticaMT($url, $cnpj, $nome)
 	  {
-		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
-		//Consulta por nome
+		$resultado = "";
+		
+		if(isset($nome) && $nome != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");
+			
+			$selenium->select("id=ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_ddlComarcas", "value=");
+			$selenium->type("id=ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_txtNomeParte", $nome);
+			$selenium->click("id=ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_btSubmit");
+			$selenium->waitForPageToLoad("10000");
+			
+			$selenium->click("id=ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_listPartes_ctrl0_LinkButton1");
+			$selenium->waitForPageToLoad("10000");
+			
+			$processo = $selenium->getText("//div[@id='listaProcesso']/div/div/span");
+			if(existeElemento($processo)) $resultado .= "<b>".$processo."</b><br/>";
+			
+			$nome_parte = $selenium->getText("css=span.tamanho13.family");
+			if(existeElemento($nome_parte)) $resultado .= "<b>Nome da Parte:</b> ".$nome_parte."<br/>";		
+
+			$comarca = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table/tbody/tr/td[2]/span");
+			if(existeElemento($comarca)) $resultado .= "<b>Comarca:</b> ".$comarca."<br/>";			
+
+			$assunto = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr/td[2]/span");
+			if(existeElemento($assunto)) $resultado .= "<b>Assunto:</b> ".$assunto."<br/>";		
+
+			$tipo_acao = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr[2]/td[2]/span");
+			if(existeElemento($tipo_acao)) $resultado .= "<b>Tipo de A&ccedil;&atilde;o:</b> ".$tipo_acao."<br/>";				
+			
+			$lotacao = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr[3]/td[2]/span");
+			if(existeElemento($lotacao)) $resultado .= "<b>Lota&ccedil;&atilde;o:</b> ".$lotacao."<br/>";			
+			
+			$livro = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr[4]/td[2]/span");
+			if(existeElemento($livro)) $resultado .= "<b>Livro:</b> ".$livro."<br/>";		
+
+			$tipo = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr[5]/td[2]/span");
+			if(existeElemento($tipo)) $resultado .= "<b>Tipo:</b> ".$tipo."<br/>";		
+
+			$juiz_atual = $selenium->getText("//span[@id='ctl00_ctl00_ctl00_ctl00_phMiolo_ContentPrincipal_cphConsultaProcessoPrincipal_Principal_lblParametroPesquisa']/table[2]/tbody/tr[6]/td[2]/span");
+			if(existeElemento($juiz_atual)) $resultado .= "<b>Juiz Atual:</b> ".$juiz_atual."<br/>";
+
+			$resultado .= "<br/><b>Para ver os demais processos, clique no link a seguir: <a target='_blank' href='http://servicos.tjmt.jus.br/processos/comarcas/listaParte.aspx'>ver processos</a></b>";			
+			
+			$selenium->stop();
+			$selenium->close();				
+		}
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte."; 		
+		}
+		
+		return $resultado;
 	  }
 	  
-	  protected function consultaTribunalJusticaPA($url, $cnpj)
+	  protected function consultaTribunalJusticaPA($url, $cnpj, $nome, $processo)
 	  {
-		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
-		//Consulta por nome
+		$resultado = "";
+		
+		if(isset($nome) && $nome != "")
+		{
+			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1->start();
+			$selenium1->open($url);
+			$selenium1->windowMaximize();
+			$selenium1->waitForPageToLoad("10000");
+
+			$selenium1->click("css=#menuConsultaDetalhada > a");
+			
+			$selenium1->waitForCondition("document.getElementById('radioPorNomeParte')", 1000);
+			$selenium1->click("id=radioPorNomeParte");
+			$selenium1->click("id=checkNomeCompleto");
+			
+			$selenium1->waitForCondition("document.getElementById('inputTextPorNomeParte')", 1000);
+			$selenium1->type("id=inputTextPorNomeParte", $nome);	
+			
+			$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+			$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+			$captcha = imagecreate(150, 50);
+			
+			imagecopy($captcha, $printscreen, 0, 0, 200, 425, 150, 50);
+			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+			
+			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2->start();
+			$selenium2->setTimeout(60000);
+			$selenium2->open("http://beatcaptchas.com/captcha.php");
+			$selenium2->windowMaximize();
+			$selenium2->waitForPageToLoad("10000");
+			$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+			$selenium2->focus('name=file');
+			$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+			$selenium2->click("name=submit");
+			$selenium2->waitForPageToLoad("40000");
+			$textoCaptcha = $selenium2->getText("css=td");
+						
+			$selenium1->type("id=textCaptcha", $textoCaptcha);
+			$selenium1->click("id=buttonPesquisar");
+			
+			$resultado .= "<table class='mini-tabela'><tr><th>N&uacute;mero Processo</th><th>Classe</th><th>Assunto</th><th>Vara</th><th>Nome da Parte</th><th>Participa&ccedil;&atilde;o</th></tr>";
+			
+			for($i=0; $i < 10; $i++)
+			{
+				$row = $i + 1;
+				$numProcesso  = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".0");
+				$classe		  = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".1");
+				$assunto	  = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".2");
+				$vara	 	  = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".3");
+				$nomeParte	  = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".4");
+				$participacao = $selenium1->getTable("css=table.tablesorter.tablesorter-blue.".$row.".5");
+			
+				$resultado .= "<tr>";
+				if(existeElemento($numProcesso)){ $resultado .= "<td>".$numProcesso."</td>"; }else{ $resultado .= "<td></td>"; };
+				if(existeElemento($classe)){ $resultado .= "<td>".$classe."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($assunto)){ $resultado .= "<td>".$assunto."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($vara)){ $resultado .= "<td>".$vara."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($nomeParte)){ $resultado .= "<td>".$nomeParte."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($participacao)){ $resultado .= "<td>".$participacao."</td>"; }else{ $resultado .= "<td></td>"; }
+				$resultado .= "</tr>";		
+			}
+			
+			$resultado .= "</table>";
+
+			$selenium1->stop();
+			$selenium1->close();	
+			$selenium2->stop();
+			$selenium2->close();				
+		}
+		else
+		{
+			if(isset($processo) && $processo != "")
+			{						
+				$selenium1 = new Testing_Selenium("*chrome", $url);
+				$selenium1->start();
+				$selenium1->open($url);
+				$selenium1->windowMaximize();
+				$selenium1->waitForPageToLoad("10000");
+
+				$selenium1->waitForCondition("document.getElementById('textProcesso')", 1000);
+				$selenium1->type("id=textProcesso", $processo);
+				
+				$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+				$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+				$captcha = imagecreate(150, 50);
+				
+				imagecopy($captcha, $printscreen, 0, 0, 175, 330, 150, 50);
+				imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+				
+				$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+				$selenium2->start();
+				$selenium2->setTimeout(60000);
+				$selenium2->open("http://beatcaptchas.com/captcha.php");
+				$selenium2->windowMaximize();
+				$selenium2->waitForPageToLoad("10000");
+				$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+				$selenium2->focus('name=file');
+				$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+				$selenium2->click("name=submit");
+				$selenium2->waitForPageToLoad("40000");
+				$textoCaptcha = $selenium2->getText("css=td");
+							
+				$selenium1->type("id=textCaptcha", $textoCaptcha);
+				$selenium1->click("id=buttonPesquisar");
+				
+				$selenium1->waitForCondition("document.getElementById('divDadosProcesso')", 1000);
+				
+				$processo = $selenium1->getText("//div[@id='divDadosProcesso']/table/tbody/tr/td[2]");				
+				if(existeElemento($processo)) $resultado .= "<b>".$processo."<br/>";				
+
+				$instancia = $selenium1->getText("//div[@id='divDadosProcesso']/table/tbody/tr[3]/td[2]");
+				if(existeElemento($instancia)) $resultado .= "<b>Inst&acirc;ncia:</b> ".$instancia."<br/>";		
+
+				$comarca = $selenium1->getText("//div[@id='divDadosProcesso']/table/tbody/tr[4]/td[2]");
+				if(existeElemento($comarca)) $resultado .= "<b>Comarca:</b> ".$comarca."<br/>";			
+
+				$situacao = $selenium1->getText("//div[@id='divDadosProcesso']/table/tbody/tr[5]/td[2]");
+				if(existeElemento($situacao)) $resultado .= "<b>Situa&ccedil&atilde;o:</b> ".$situacao."<br/>";			
+
+				$area = $selenium1->getText("//div[@id='divDadosProcesso']/table/tbody/tr[6]/td[2]");
+				if(existeElemento($area)) $resultado .= "<b>&Aacute;rea:</b> ".$area."<br/>";	
+
+				$selenium1->stop();
+				$selenium1->close();	
+				$selenium2->stop();
+				$selenium2->close();					
+			}
+			else
+			{
+				$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte ou o n&uacute;mero do processo."; 	
+			}
+		}
+		
+		return $resultado;
 	  }	  
 	  
-	  protected function consultaTribunalJusticaPB($url, $cnpj)
+	  protected function consultaTribunalJusticaPB($url, $cnpj, $nome, $processo)
 	  {
-		return "Não existem resultados para o Processo informado no grau de jurisdição selecionado.";
-		//Consulta por nome
+		$resultado = "";
+		
+		if(isset($nome) && $nome != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");
+			
+			$selenium->select("id=formConsultaProcessual:blocoConsultaPadrao:cpSelectTipoPesquisa", "value=3");
+			$selenium->type("id=formConsultaProcessual:blocoConsultaPadrao:textoPesquisa", $nome);
+			$selenium->click("id=formConsultaProcessual:blocoConsultaPadrao:botaoConsultar");
+				
+			$selenium->waitForPageToLoad("10000");
+			$resultados = $selenium->getText("css=h4");
+			
+			if(existeElemento($resultados))
+			{
+				$resultado .= "<b>" . $resultados . "</b><br/>";
+				$arrResultado = explode(" ", $resultados);
+				$qtdProcessos = (int)$arrResultado[6];
+				
+				if($qtdProcessos > 50)
+				{
+					$range = 50;
+				}
+				else
+				{
+					$range = $qtdProcessos;
+				}
+				
+				$resultado .= "<table class='mini-tabela'><tr><th>Nome da Parte</th><th>N&ordm; do Processo</th><th>Comarca</th><th>Jurisdi&ccedil;&atilde;o</th></tr>";
+				
+				for($i=0; $i < $range; $i++)
+				{
+					$row = $i + 1;
+					$nomeParte   = $selenium->getTable("id=formConsultaProcessualParte:partesSelect.".$row.".1");
+					$numProcesso = $selenium->getTable("id=formConsultaProcessualParte:partesSelect.".$row.".2");
+					$comarca	 = $selenium->getTable("id=formConsultaProcessualParte:partesSelect.".$row.".4");
+					$jurisdicao	 = $selenium->getTable("id=formConsultaProcessualParte:partesSelect.".$row.".5");		
+				
+					$resultado .= "<tr>";
+					if(existeElemento($nomeParte)){ $resultado .= "<td>".$nomeParte."</td>"; }else{ $resultado .= "<td></td>"; };
+					if(existeElemento($numProcesso)){ $resultado .= "<td>".$numProcesso."</td>"; }else{ $resultado .= "<td></td>"; }
+					if(existeElemento($comarca)){ $resultado .= "<td>".$comarca."</td>"; }else{ $resultado .= "<td></td>"; }
+					if(existeElemento($jurisdicao)){ $resultado .= "<td>".$jurisdicao."</td>"; }else{ $resultado .= "<td></td>"; }
+					$resultado .= "</tr>";		
+				}
+				
+				$resultado .= "</table>";				
+			}
+			else
+			{
+				$resultado = "Nenhum processo encontrado.";
+			}
+
+			$selenium->stop();
+			$selenium->close();			
+		}
+		
+		return $resultado;
 	  }
 
 	  protected function consultaTribunalJusticaPE($url, $cnpj)
@@ -983,13 +1355,14 @@
 		
 		$selenium1->click("id=rbBusca6");
 		$selenium1->select("id=tipo","label=CNPJ");
+		$selenium1->type("id=cpfcnpj", $cnpj);
 		
 		$selenium1->windowMaximize();		
 		$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
 		$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
 		$captcha = imagecreate(120, 30);
 		
-		imagecopy($captcha, $printscreen, 0, 0, 210, 300, 120, 30);
+		imagecopy($captcha, $printscreen, 0, 0, 210, 290, 120, 30);
 		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
 		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
@@ -1002,34 +1375,166 @@
 		$selenium2->focus('name=file');
 		$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
 		$selenium2->click("name=submit");
-		$selenium2->waitForPageToLoad("40000");
-		$textoCaptcha = $selenium2->getText("css=td");
+		$selenium2->waitForPageToLoad("50000");
+		$textoCaptcha = $selenium2->getText("css=td");			
 		
-		$selenium1->type("id=CaptchaBox6", $textoCaptcha);
-		$selenium1->click("css=input.input_02");
-		$selenium1->waitForPageToLoad("10000");		
+		$selenium1->type("id=CaptchaBox6",$textoCaptcha);
+		$selenium1->click("css=tr.texto01 > td > div > input.input02");
 		
-		$resultado .= $selenium1->getText("css=span.menu_01");		
-		// Buscar mais campos posteriormente
+		$selenium1->waitForPageToLoad("10000");				
+		$resultados = $selenium1->getText("css=span.menu_01");		
+		
+		if(existeElemento($resultados))
+		{
+			$resultado .= "<b>".$resultados."</b><br/>";
+			$arrResultados = explode(" ", $resultados);
+			$qtdProcessos = (int)$arrResultados[1];
+			
+			$resultado .= "<table class='mini-tabela'><tr><th>Nome da Parte</th><th>CNPJ</th></tr>";
+			
+			for($i=0; $i < 20; $i++)
+			{
+				$row = $i + 1;
+				$nomeParte   = $selenium1->getTable("//table[2].".$row.".0");
+				$CNPJ = $selenium1->getTable("//table[2].".$row.".1");	
+			
+				$resultado .= "<tr>";
+				if(existeElemento($nomeParte)){ $resultado .= "<td><a target='_blank' href='http://www.tjpe.jus.br/processos/consulta2grau/ole_busca_processos_nome2.asp?pessoa=746213&nome=".$nomeParte."'>".$nomeParte."</a></td>"; }else{ $resultado .= "<td></td>"; };
+				if(existeElemento($CNPJ)){ $resultado .= "<td>".$CNPJ."</td>"; }else{ $resultado .= "<td></td>"; }
+				$resultado .= "</tr>";		
+			}
+			
+			$resultado .= "</table>";				
+		}
+		else
+		{
+			$resultado .= "Nenhum resultado encontrado.";
+		}
 		
 		$selenium1->stop();
 		$selenium1->close();	
 		$selenium2->stop();
-		$selenium2->close();			
+		$selenium2->close();	
 
 		return $resultado;
 	  }	  
 	  
-	  protected function consultaTribunalJusticaPI($url, $cnpj)
+	  protected function consultaTribunalJusticaPI($url, $cnpj, $nome, $processo)
 	  {
-		return "Nenhum processo encontrado para o CNPJ " . $cnpj;
-		//Consulta por nome
+		$resultado = "";
+		
+		if(isset($nome) && $nome != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");
+
+			$selenium->click("link=Por parte");
+			$selenium->waitForCondition("document.getElementById('select-comarca-numero')", 1000);
+			
+			$selenium->click("id=checkbox-parte-juridica");
+			$selenium->type("id=input-parte-nome", $nome);
+			$selenium->click("name=consulta.mostrarBaixados");
+			$selenium->click("xpath=(//button[@type='submit'])[2]");			
+			$selenium->waitForPageToLoad("10000");
+			
+			$resultados = $selenium->getText("css=strong");	
+			
+			if(existeElemento($resultados)) 
+			{
+				$resultado .= "<b>" . $resultados . "</b><br/><br/>";				
+			
+				$processo = $selenium->getText("css=div.numero-processo > a");
+				if(existeElemento($processo)) $resultado .= "<b>" . $processo . "</b><br/>";
+				
+				$data_abertura = $selenium->getText("//div[@id='processos']/div/table/tbody/tr[2]/td");
+				if(existeElemento($data_abertura)) $resultado .= "<b>Data de abertura:</b> " . $data_abertura . "<br/>";
+
+				$natureza = $selenium->getText("//div[@id='processos']/div/table/tbody/tr[3]/td");
+				if(existeElemento($natureza)) $resultado .= "<b>Natureza:</b> " . $natureza . "<br/>";	
+
+				$classe = $selenium->getText("//div[@id='processos']/div/table/tbody/tr[4]/td");
+				if(existeElemento($classe)) $resultado .= "<b>Classe:</b> " . $classe . "<br/>";			
+				
+				$vara = $selenium->getText("//div[@id='processos']/div/table/tbody/tr[5]/td");
+				if(existeElemento($vara)) $resultado .= "<b>Vara:</b> " . $vara . "<br/>";
+
+				$resultado .= "<br/><b>Para ver os outros  processos, clique no link a seguir: <a target='_blank' href='http://www.tjpi.jus.br/themisconsulta/consulta/parte'>ver processos</a></b>";						
+			}
+			else
+			{
+				$resultado .= "Nenhum resultado encontrado.";
+			}
+		}		
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte ou o n&uacute;mero do processo.";
+		}
+		
+		return $resultado;
 	  }	  	 
 
-	  protected function consultaTribunalJusticaPR($url, $cnpj)
+	  protected function consultaTribunalJusticaPR($url, $cnpj, $nome, $processo)
 	  {
-		return "Nenhum registro encontrado";
-		//Consulta por número do processo
+		$resultado = "";
+	  
+		if(isset($processo) && $processo != "")
+		{
+			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1->start();
+			$selenium1->open($url);	
+			$selenium1->waitForPageToLoad("10000");		
+			
+			$selenium1->type("id=numeroUnico", $processo);				
+			$selenium1->windowMaximize();		
+			$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+			$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+			$captcha = imagecreate(200, 75);
+			
+			imagecopy($captcha, $printscreen, 0, 0, 50, 440, 200, 75);
+			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+			
+			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2->start();
+			$selenium2->setTimeout(60000);
+			$selenium2->open("http://beatcaptchas.com/captcha.php");
+			$selenium2->windowMaximize();
+			$selenium2->waitForPageToLoad("10000");
+			$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+			$selenium2->focus('name=file');
+			$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+			$selenium2->click("name=submit");
+			$selenium2->waitForPageToLoad("50000");
+			$textoCaptcha = $selenium2->getText("css=td");
+			
+			$selenium1->type("id=recaptcha_response_field", $textoCaptcha);
+			$selenium1->click("id=pesquisar");
+			
+			$resultado .= "<table class='mini-tabela'><tr><th>N&uacute;mero</th><th>Partes</th><th>Classe Processual</th><th>Vara</th></tr>";
+			
+			$numero = $selenium1->getTable("css=table.resultTable.0.0");
+			$partes = $selenium1->getTable("css=table.resultTable.0.1");	
+			$classe = $selenium1->getTable("css=table.resultTable.0.2");	
+			$vara	= $selenium1->getTable("css=table.resultTable.0.2");	
+		
+			$resultado .= "<tr>";
+			if(existeElemento($numero)){ $resultado .= "<td>".$numero."</td>"; }else{ $resultado .= "<td></td>"; };
+			if(existeElemento($partes)){ $resultado .= "<td>".$partes."</td>"; }else{ $resultado .= "<td></td>"; }
+			if(existeElemento($classe)){ $resultado .= "<td>".$classe."</td>"; }else{ $resultado .= "<td></td>"; }
+			if(existeElemento($vara)){ $resultado .= "<td>".$vara."</td>"; }else{ $resultado .= "<td></td>"; }
+			$resultado .= "</tr>";		
+
+			$resultado .= "</table>";			
+
+			$selenium1->stop();
+			$selenium1->close();	
+			$selenium2->stop();
+			$selenium2->close();				
+		}
+		
+		return $resultado;
 	  }
 	  
 	  protected function consultaTribunalJusticaRJ($url, $cnpj)
@@ -1510,6 +2015,6 @@
 		}	
 
 		return $resultado;
-	  }	  
+	  }	 
 	}		  	
 ?>

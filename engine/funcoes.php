@@ -65,7 +65,7 @@
 	Função que tira pontuação do CNPJ
 	----------------------------------------------------------------------------------------------------------------------------------------	
 	*/	
-	function tiraPontuacao($cnpj)
+	function tiraPontuacaoCNPJ($cnpj)
 	{
 		$partesCNPJ = explode("/", $cnpj);
 		$metade1 = $partesCNPJ[0];
@@ -77,6 +77,23 @@
 		
 		return $cnpj;
 	}
+	
+	/*
+	----------------------------------------------------------------------------------------------------------------------------------------
+	Função que tira pontuação do processo
+	----------------------------------------------------------------------------------------------------------------------------------------	
+	*/	
+	function tiraPontuacaoProcesso($processo)
+	{
+		$partesProcesso = explode("-", $processo);
+		$metade1 = $partesProcesso[0];
+		$metade2 = $partesProcesso[1];
+		
+		$partesMetade2 = explode(".", $metade2);
+		$processo = $metade1 . $partesMetade2[0] . $partesMetade2[1] . $partesMetade2[2] . $partesMetade2[3] . $partesMetade2[4];
+		
+		return $processo;
+	}	
 	
 	/*
 	----------------------------------------------------------------------------------------------------------------------------------------
@@ -172,4 +189,24 @@
 		}
 		
 		return $resposta;
+	}
+	
+	/*
+	----------------------------------------------------------------------------------------------------------------------------------------
+	Função para testar se existe um elemento capturado pelo Selenium
+	----------------------------------------------------------------------------------------------------------------------------------------	
+	*/		
+	
+	function existeElemento($elemento)
+	{
+		$arrElemento = explode(" ", $elemento);
+		
+		if($arrElemento[0] != "OR:")
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}

@@ -20,7 +20,11 @@
 	$diretorio_atual = getcwd();
 	criarDiretorios($diretorio_atual);
 	
+	//Testando variáveis
+	if(!isset($nome)) $nome = "";
+	if(!isset($processo)) $processo = "";
+	
 	//Chamando a consulta aos tribunais
 	$consultaTribunal = new ConsultaTribunal();
-	$consultaTribunal->setUp($uf, $cnpj, $numero);
+	$consultaTribunal->setUp($uf, $cnpj, $numero, $nome, $processo);
 ?>

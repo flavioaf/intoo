@@ -107,6 +107,10 @@ td.impar{
 	color:black;
 }
 
+.mini-tabela td a{
+	color:black !important;
+}
+
 #conteudoPrincipal{
 	background-color: #619b41 !important;
 }
@@ -115,6 +119,7 @@ td.impar{
 	margin-top:-25px;
 	color:black !important;
 }
+
 
 .clear{
 	clear:both;
