@@ -498,7 +498,7 @@
 			break;	
 			case "RN":
 				$url = "http://esaj.tjrn.jus.br/cpo/pg/search.do;jsessionid=CA600C1A47B9BCC34FB046B144588F8D.appsWeb1?paginaConsulta=1&localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&tipoNuProcesso=UNIFICADO&dePesquisa=".$cnpj;
-				$resultado = $this->consultaTribunalJusticaRN($url);
+				$resultado = $this->consultaTribunalJusticaRN($url, $cnpj);
 				$consulta = true;
 			break;
 			case "RO":
@@ -507,13 +507,13 @@
 				$consulta = true;
 			break;	
 			case "RR":
-				$url = "http://www.tjro.jus.br/pginicial/form_appg_apsg.shtml";
-				$resultado = $this->consultaTribunalJusticaRO($url);
+				$url = "http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/index_nome.jsp";
+				$resultado = $this->consultaTribunalJusticaRR($url, $nome, $processo);
 				$consulta = true;
 			break;
 			case "RS":
 				$url = "http://www.tjrs.jus.br/busca/?tb=proc";
-				$resultado = $this->consultaTribunalJusticaRO($url);
+				$resultado = $this->consultaTribunalJusticaRS($url);
 				$consulta = true;
 			break;				
 		}
@@ -1517,7 +1517,7 @@
 			$numero = $selenium1->getTable("css=table.resultTable.0.0");
 			$partes = $selenium1->getTable("css=table.resultTable.0.1");	
 			$classe = $selenium1->getTable("css=table.resultTable.0.2");	
-			$vara	= $selenium1->getTable("css=table.resultTable.0.2");	
+			$vara	= $selenium1->getTable("css=table.resultTable.0.3");	
 		
 			$resultado .= "<tr>";
 			if(existeElemento($numero)){ $resultado .= "<td>".$numero."</td>"; }else{ $resultado .= "<td></td>"; };
@@ -1553,12 +1553,37 @@
 		$selenium->click("id=pesquisa");
 		$selenium->waitForPageToLoad("10000");
 
-		$resultado .= $selenium->getText("link=0007531-81.2013.8.19.0001") . "<br/>";		
-		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[2]/td") . "<br/>";		
-		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[3]/td") . "<br/>";		
-		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[4]/td") . "<br/>";		
-		$resultado .= $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[5]/td") . "<br/>";		
-		// Buscar mais campos posteriormente
+		$total = $selenium->getText("//div[@id='content']/table/tbody/tr/td[2]/h3");
+		
+		if(existeElemento($total))
+		{
+			$resultado .= "<b>".$total."</b>";
+			$arrTotal = explode(" ", $total);
+			$qtdTotal = (int)$arrTotal[4];
+			
+			if($qtdTotal > 0)
+			{				
+				$processo = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr/td");		
+				if(existeElemento($processo)) $resultado .= "<br/><br/><b>" . $processo . "</b><br/>";
+				
+				$autor = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[2]/td");	
+				if(existeElemento($autor)) $resultado .= "<b>Autor:</b> " . $autor . "<br/>";
+				
+				$reu = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[3]/td");
+				if(existeElemento($reu)) $resultado .= "<b>R&eacute;u:</b> " . $reu . "<br/>";
+				
+				$fase = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[4]/td");	
+				if(existeElemento($fase)) $resultado .= "<b>Fase:</b> " . $fase . "<br/>";
+				
+				$comarca = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[5]/td");
+				if(existeElemento($comarca)) $resultado .= "<b>Comarca:</b> " . $comarca . "<br/>";
+				
+				$serventia = $selenium->getText("//div[@id='content']/form/table[3]/tbody/tr[6]/td");	
+				if(existeElemento($serventia)) $resultado .= "<b>Serventia:</b> " . $serventia . "<br/>";	
+
+				$resultado .= "<br/><b>Para ver os demais " . ($qtdTotal - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://www4.tjrj.jus.br/consultaProcessoNome/consultaCPF.do'>ver processos</a></b>";										
+			}		
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -1566,7 +1591,7 @@
 		return $resultado;
 	  }
 
-	  protected function consultaTribunalJusticaRN($url)
+	  protected function consultaTribunalJusticaRN($url, $cnpj)
 	  {		
 		$resultado = "";
 	  
@@ -1575,8 +1600,32 @@
 		$selenium->open($url);
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
+			
+		$resultado .= $selenium->getText("//div[@id='spwTabelaMensagem']/table/tbody/tr[2]/td[2]/li") . "<br/>";
+		$arrResultado = explode(" ", $resultado);
 		
-		$resultado .= $selenium->getText("css=.fundoClaro > div.fundoClaro") . "<br/>";
+		if($arrResultado[0] == "OR:") //Existe pelo menos um processo
+		{		
+			$paginacao = $selenium->getText("css=#paginacaoSuperior > tbody > tr > td");
+			$arrPaginacao = explode(" ", $paginacao);		
+			$qtdProcessos = (int)$arrPaginacao[5];
+		
+			if($arrPaginacao[0] == "OR:") //Somente um processo
+			{		
+				$resultado = $this->buscarProcessoESAJ($selenium);
+			}
+			else //Vários processos			
+			{
+				$resultado = "";
+				$resultado .= "<b>Foram encontrados " . $qtdProcessos . " processos</b><br/>";
+				
+				$selenium->click("class=linkProcesso");
+				$selenium->waitForPageToLoad("10000");
+				
+				$resultado .= $this->buscarProcessoESAJ($selenium) . "<br/>";				
+				$resultado .= "<b>Para ver os demais " . ($qtdProcessos - 1) . " processos, clique no link a seguir: <a target='_blank' href='http://esaj.tjrn.jus.br/cpo/pg/search.do;jsessionid=CA600C1A47B9BCC34FB046B144588F8D.appsWeb1?paginaConsulta=1&localPesquisa.cdLocal=-1&cbPesquisa=DOCPARTE&tipoNuProcesso=UNIFICADO&dePesquisa=".$cnpj."'>ver processos</a></b>";
+			}
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -1601,8 +1650,41 @@
 		$selenium->click("name=Submit3");
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= $selenium->getText("css=#corpo > div");
-		//Buscar mais campos futuramente
+		$registrosEncontrados = $selenium->getText("css=#corpo > div");
+		
+		if(existeElemento($registrosEncontrados))
+		{
+			$arrRegistrosEncontrados = explode("-", $registrosEncontrados);
+			$segundaFrase = trim($arrRegistrosEncontrados[1]);
+			$resultado .= "<b>" . $segundaFrase . "</b><br/>";
+			
+			$arr2RegistrosEncontrados = explode(" ", $segundaFrase);
+			$qtdRegistros = (int)$arr2RegistrosEncontrados[0];
+			
+			if($qtdRegistros > 0)
+			{
+				$resultado .= "<table class='mini-tabela'><tr><th>Nome</th><th>C&oacute;digo de Cadastro</th><th></th></tr>";
+			
+				for($i = 0; $i < $qtdRegistros; $i++)
+				{										
+					$nome = $selenium->getTable("css=#_idJsp6 > table.".$i.".0");
+					$codigo = $selenium->getTable("css=#_idJsp6 > table.".$i.".1");	
+					$mf = $selenium->getTable("css=#_idJsp6 > table.".$i.".2");	
+				
+					$resultado .= "<tr>";
+					if(existeElemento($nome)){ $resultado .= "<td>".$nome."</td>"; }else{ $resultado .= "<td></td>"; };
+					if(existeElemento($codigo)){ $resultado .= "<td>".$codigo."</td>"; }else{ $resultado .= "<td></td>"; }
+					if(existeElemento($mf)){ $resultado .= "<td>".$mf."</td>"; }else{ $resultado .= "<td></td>"; }
+					$resultado .= "</tr>";					
+				}
+				
+				$resultado .= "</table>";					
+			}
+		}
+		else
+		{
+			$resultado .= "Nenhum registro encontrando para este CNPJ.";
+		}
 		
 		$selenium->stop();
 		$selenium->close();	
@@ -1610,10 +1692,75 @@
 		return $resultado;
 	  }
 
-	  protected function consultaTribunalJusticaRR($url)
+	  protected function consultaTribunalJusticaRR($url, $nome, $processo)
 	  {
-		return "N&atilde;o foi encontrado nenhum processo com o crit&eacute;rio de pesquisa utilizado!";
-		//Consulta por nome
+		$resultado = "";
+	  
+		if(isset($nome) && $nome != "")
+		{
+			$url = "http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/proc_nome.jsp?comrCodigo=0010&numero=1";
+		
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");			
+
+			$selenium->type("name=nomePessoa", $nome);
+			$selenium->click("name=btn_pesquisar");
+			$selenium->waitForPageToLoad("120000");	
+			
+			$pessoasEncontradas = $selenium->getText("//p[2]/b");
+			
+			if(existeElemento($pessoasEncontradas))
+			{
+				$resultado .= "<b>".$pessoasEncontradas."</b><br/>";
+				$arrPessoasEncontradas = explode(" ", $pessoasEncontradas);
+				$qtdPessoas = (int)$arrPessoasEncontradas[2];
+				
+				if($qtdPessoas > 0)
+				{
+					$resultado .= "<table class='mini-tabela'><tr><th>Nome</th><th>N&uacute;mero</th></tr>";
+				
+					for($i = 0; $i < $qtdPessoas; $i++)
+					{										
+						$nome = $selenium->getText("//table[".($i+2)."]/thead/tr/th/b");
+						$numero = $selenium->getText("//table[".($i+2)."]/thead/tr/th[2]/b");									
+						$linkProcesso = $selenium->getText("//table[".($i+2)."]/tbody/tr[3]/td/div");
+					
+						$resultado .= "<tr>";
+						if(existeElemento($nome)){ $resultado .= "<td>".$nome."</td>"; }else{ $resultado .= "<td></td>"; };
+						if(existeElemento($numero)){ $resultado .= "<td>".$linkProcesso."</td>"; }else{ $resultado .= "<td></td>"; }					
+						$resultado .= "</tr>";					
+					}
+					
+					$resultado .= "</table>";
+				}					
+				else
+				{
+					$resultado .= "Nenhuma pessoa foi encontrada com o nome fornecido.";
+				}
+			}
+		}		
+		else
+		{
+			if(isset($processo) && $processo != "")
+			{
+				$url = "http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/proc_massiva.jsp?comrCodigo=0010&numero=1";
+				
+				$selenium = new Testing_Selenium("*chrome", $url);
+				$selenium->start();
+				$selenium->open($url);
+				$selenium->windowMaximize();
+				$selenium->waitForPageToLoad("10000");	
+			}
+			else
+			{
+				$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome ou o n&uacute;mero do processo."; 
+			}
+		}
+
+		return $resultado;
 	  }	  	 
 
 	  protected function consultaTribunalJusticaRS($url)
