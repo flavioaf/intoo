@@ -512,8 +512,8 @@
 				$consulta = true;
 			break;
 			case "RS":
-				$url = "http://www.tjrs.jus.br/busca/?tb=proc";
-				$resultado = $this->consultaTribunalJusticaRS($url);
+				$url = "http://www3.tjrs.jus.br/site_php/consulta/index.php";
+				$resultado = $this->consultaTribunalJusticaRS($url, $nome, $processo);
 				$consulta = true;
 			break;				
 		}
@@ -1726,11 +1726,15 @@
 					{										
 						$nome = $selenium->getText("//table[".($i+2)."]/thead/tr/th/b");
 						$numero = $selenium->getText("//table[".($i+2)."]/thead/tr/th[2]/b");									
-						$linkProcesso = $selenium->getText("//table[".($i+2)."]/tbody/tr[3]/td/div");
+						$infoProcesso = $selenium->getText("//table[".($i+2)."]/tbody/tr[3]/td/div");
+						
+						$arrProcesso  = explode("[", $infoProcesso);
+						$arrProcesso2 = explode("-", $arrProcesso[1]);
+						$linkProcesso = $arrProcesso2[0];
 					
 						$resultado .= "<tr>";
-						if(existeElemento($nome)){ $resultado .= "<td>".$nome."</td>"; }else{ $resultado .= "<td></td>"; };
-						if(existeElemento($numero)){ $resultado .= "<td>".$linkProcesso."</td>"; }else{ $resultado .= "<td></td>"; }					
+						if(existeElemento($nome)){ $resultado .= "<td><a target='_blank' href='http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/proc_resultado.jsp?listaProcessos=".$linkProcesso."&comrCodigo=10&numero=1'>".$nome."</a></td>"; }else{ $resultado .= "<td></td>"; };
+						if(existeElemento($numero)){ $resultado .= "<td>".$numero."</td>"; }else{ $resultado .= "<td></td>"; }					
 						$resultado .= "</tr>";					
 					}
 					
@@ -1756,17 +1760,71 @@
 			}
 			else
 			{
-				$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome ou o n&uacute;mero do processo."; 
+				$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome."; 
 			}
 		}
 
 		return $resultado;
 	  }	  	 
 
-	  protected function consultaTribunalJusticaRS($url)
+	  protected function consultaTribunalJusticaRS($url, $nome, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por nome
+		$resultado = "";
+	  
+		if(isset($nome) && $nome != "")
+		{				
+			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1->start();
+			$selenium1->open($url);
+			$selenium1->windowMaximize();
+			$selenium1->waitForPageToLoad("10000");
+
+			$selenium1->click("link=Por Nome da Parte");
+			$selenium1->waitForCondition("document.getElementById('nome_parte')", 1000);
+			$selenium1->type("id=nome_parte", $nome);
+			
+			$selenium1->captureEntirePageScreenshot("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png",NULL);
+			$printscreen = imagecreatefrompng("C:\\xampp\\htdocs\\intoo\\trunk\\screenshots\\print.png");
+			$captcha = imagecreate(150, 50);
+			
+			imagecopy($captcha, $printscreen, 0, 0, 725, 475, 150, 50);
+			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
+			
+			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2->start();
+			$selenium2->setTimeout(60000);
+			$selenium2->open("http://beatcaptchas.com/captcha.php");
+			$selenium2->windowMaximize();
+			$selenium2->waitForPageToLoad("10000");
+			$selenium2->type("id=key","6ncqawd80jsv5ikz8muwug6wk4zv4bmyomgm8hiy");
+			$selenium2->focus('name=file');
+			$selenium2->type("name=file","C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");		
+			$selenium2->click("name=submit");
+			$selenium2->waitForPageToLoad("50000");
+			$textoCaptcha = $selenium2->getText("css=td");
+			
+			$selenium1->type("id=code", $textoCaptcha);
+			$selenium1->click("id=btnPesquisar");
+			$selenium1->waitForPageToLoad("10000");
+			
+			$processosEncontrados = $selenium1->getText("//div[@id='conteudo']/table[3]/tbody/tr/td");
+			
+			if(existeElemento($processosEncontrados))
+			{
+				$resultado .= "Não foram encontrados processos para o nome conforme os critérios acima. Tente refazer a pesquisa com o critério Situação selecionado na opção Baixados.";
+			}
+
+			$selenium1->stop();
+			$selenium1->close();
+			$selenium2->stop();
+			$selenium2->close();			
+		}		
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o nome da parte."; 
+		}
+
+		return $resultado;
 	  }
 
 	  protected function consultaTribunaisRegionaisTrabalho($cnpj, $numero)
