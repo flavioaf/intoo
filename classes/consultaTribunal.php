@@ -1836,122 +1836,122 @@
 		{
 			case 52:	
 				$url = "http://www.trt1.jus.br/consulta-processual";
-				$resultado = $this->consultaTRT1Regiao($url);
+				$resultado = $this->consultaTRT1Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 53:	
 				$url = "https://pje.trt2.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT2Regiao($url, $cnpj);
+				$resultado = $this->consultaTRT2Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 54:	
 				$url = "https://pje.trt3.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT3Regiao($url);
+				$resultado = $this->consultaTRT3Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 55:	
 				$url = "http://www.trt4.jus.br/portal/portal/trt4/consultas/consulta_lista";
-				$resultado = $this->consultaTRT4Regiao($url);
+				$resultado = $this->consultaTRT4Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 56:	
 				$url = "https://pje.trt5.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
-				$resultado = $this->consultaTRT5Regiao($url);
+				$resultado = $this->consultaTRT5Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 57:	
 				$url = "http://www.trt6.jus.br/portal/";
-				$resultado = $this->consultaTRT6Regiao($url);
+				$resultado = $this->consultaTRT6Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 58:	
 				$url = "https://pje.trt7.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
-				$resultado = $this->consultaTRT7Regiao($url);
+				$resultado = $this->consultaTRT7Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 59:	
 				$url = "https://pje.trt8.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
-				$resultado = $this->consultaTRT8Regiao($url);
+				$resultado = $this->consultaTRT8Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 60:	
 				$url = "https://pje.trt9.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
-				$resultado = $this->consultaTRT9Regiao($url);
+				$resultado = $this->consultaTRT9Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 61:	
 				$url = "http://pje.trt10.jus.br/primeirograu/login.seam";
-				$resultado = $this->consultaTRT10Regiao($url);
+				$resultado = $this->consultaTRT10Regiao($url, $processo);
 				$consulta = true;
 			break;		
 			case 62:	
 				$url = "https://pje.trt11.jus.br/consultaprocessual/pages/consultas/ConsultaProcessual.seam";
-				$resultado = $this->consultaTRT11Regiao($url);
+				$resultado = $this->consultaTRT11Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 63:	
 				$url = "https://pje.trt12.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT12Regiao($url);
+				$resultado = $this->consultaTRT12Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 64:	
 				$url = "https://pje.trt13.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT13Regiao($url);
+				$resultado = $this->consultaTRT13Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 65:	
 				$url = "http://pje.trt14.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT14Regiao($url);
+				$resultado = $this->consultaTRT14Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 66:	
 				$url = "https://pje.trt15.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT15Regiao($url);
+				$resultado = $this->consultaTRT15Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 67:	
 				$url = "http://pje.trt16.jus.br/primeirograu/login.seam";
-				$resultado = $this->consultaTRT16Regiao($url);
+				$resultado = $this->consultaTRT16Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 68:	
 				$url = "http://pje.trtes.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT17Regiao($url);
+				$resultado = $this->consultaTRT17Regiao($url, $processo);
 				$consulta = true;
 			break;			
 			case 69:	
 				$url = "https://pje.trt18.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT18Regiao($url);
+				$resultado = $this->consultaTRT18Regiao($url, $processo);
 				$consulta = true;
 			break;
 			case 70:	
 				$url = "http://www.trt19.jus.br/siteTRT19/irPara?id=7";
-				$resultado = $this->consultaTRT19Regiao($url);
+				$resultado = $this->consultaTRT19Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 71:	
 				$url = "https://pje.trt20.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT20Regiao($url);
+				$resultado = $this->consultaTRT20Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 72:	
 				$url = "https://pje.trt21.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT21Regiao($url);
+				$resultado = $this->consultaTRT21Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 73:	
 				$url = "http://pje.trt22.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT22Regiao($url);
+				$resultado = $this->consultaTRT22Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 74:	
 				$url = "https://pje.trt23.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT23Regiao($url);
+				$resultado = $this->consultaTRT23Regiao($url, $processo);
 				$consulta = true;
 			break;	
 			case 75:	
 				$url = "https://pje.trt24.jus.br/primeirograu/ConsultaPublica/listView.seam";
-				$resultado = $this->consultaTRT24Regiao($url);
+				$resultado = $this->consultaTRT24Regiao($url, $processo);
 				$consulta = true;
 			break;				
 		}
@@ -1964,13 +1964,7 @@
 		echo $resultado;			
 	  }
 
-	  protected function consultaTRT1Regiao($url)
-	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por nome
-	  }
-
-	  protected function consultaTRT2Regiao($url, $cnpj)
+	  protected function consultaTRT1Regiao($url, $processo)
 	  {
 		$resultado = "";
 	  
@@ -1980,148 +1974,176 @@
 		$selenium->windowMaximize();
 		$selenium->waitForPageToLoad("10000");
 		
-		$selenium->type("id=cnpj", $cnpj);
-		$selenium->click("id=submit");
+		$selenium->type("id=numeroCNJ", $processo);
+		$selenium->click('css=input[type="submit"]');
 		$selenium->waitForPageToLoad("10000");
 		
-		$resultado .= $selenium->getHtmlSource();
+		$itensEncontrados = $selenium->getText("css=span.pagebanner");
 		
-		$selenium->stop();
-		$selenium->close();	
-
+		if(existeElemento($itensEncontrados))
+		{
+			$resultado .= "<b>".$itensEncontrados."</b><br/>";
+			$qtdItens = (int)$selenium->getText("css=strong");
+			
+			if($qtdItens > 0)
+			{
+				$resultado .= "<table class='mini-tabela'><tr><th>Processo</th><th>Advogado</th></tr>";
+											
+				$processo = $selenium->getText("css=label.valorResultado");
+				$advogado = $selenium->getText("//tr[@id='aui_3_2_0_197']/td[2]/label");												
+			
+				$resultado .= "<tr>";
+				if(existeElemento($processo)){ $resultado .= "<td>".$processo."</td>"; }else{ $resultado .= "<td></td>"; };
+				if(existeElemento($advogado)){ $resultado .= "<td>".$advogado."</td>"; }else{ $resultado .= "<td></td>"; }					
+				$resultado .= "</tr>";					
+					
+				$resultado .= "</table>";
+			}
+		}
+		else
+		{
+			$resultado .= "N&atilde;o h&aacute; processo cadastrado com o filtro selecionado!";
+		}
+		
 		return $resultado;
 	  }
 
-	  protected function consultaTRT3Regiao($url)
+	  protected function consultaTRT2Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo ou OAB
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
-	  protected function consultaTRT4Regiao($url)
+	  protected function consultaTRT3Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo ou OAB
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
+	  }
+
+	  protected function consultaTRT4Regiao($url, $processo)
+	  {
+		$resultado = "N&atilde;o foram encontrados processos para o CNPJ ou n&uacute;mero de processo conforme os crit&eacute;rios acima.";	
+		return $resultado;
 	  }	 	  
 
-	  protected function consultaTRT5Regiao($url)
+	  protected function consultaTRT5Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo ou OAB
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }	  
 
-	  protected function consultaTRT6Regiao($url)
+	  protected function consultaTRT6Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
+		return $resultado;
 	  }
 
-	  protected function consultaTRT7Regiao($url)
+	  protected function consultaTRT7Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
-	  protected function consultaTRT8Regiao($url)
+	  protected function consultaTRT8Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }	  
 	  
-	  protected function consultaTRT9Regiao($url)
+	  protected function consultaTRT9Regiao($url, $processo)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }		 
 
 	  protected function consultaTRT10Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }		  
 	  
 	  protected function consultaTRT11Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT12Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }		  
 	  
 	  protected function consultaTRT13Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT14Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT15Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT16Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT17Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }	  
 
 	  protected function consultaTRT18Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }	 
 	  
 	  protected function consultaTRT19Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT20Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }	
 
 	  protected function consultaTRT21Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT22Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT23Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function consultaTRT24Regiao($url)
 	  {
-		return "N&atilde;o foram encontrados processos para o CNPJ conforme os crit&eacute;rios acima.";
-		//Consulta por número do processo
+		$resultado = buscarProcessoPJE($url, $processo)
+		return $resultado;
 	  }
 
 	  protected function buscarProcessoESAJ($selenium)
@@ -2222,4 +2244,62 @@
 		return $resultado;
 	  }	 
 	}		  	
+	
+	function buscarProcessoPJE($url, $processo)
+	{
+		$resultado = "";
+	  
+		if(isset($processo) && $processo != "")
+		{
+			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium->start();
+			$selenium->open($url);
+			$selenium->windowMaximize();
+			$selenium->waitForPageToLoad("10000");
+			
+			$selenium->type("id=gF:nPDecoration:nP", $processo);
+			$selenium->click("id=gF:sB");
+			$selenium->waitForPageToLoad("10000");
+			
+			$resultadosEncontrados = $selenium->getText("css=#pG > span");
+			$arrResultadosEncontrados = explode(" ", $resultadosEncontrados);
+			$qtdResultadosEncontrados = (int)$arrResultadosEncontrados[2];		
+			
+			if($qtdResultadosEncontrados > 0)
+			{
+				$resultado .= "<b>" . $resultadosEncontrados . "</b>";
+				
+				$resultado .= "<table class='mini-tabela'><tr><th>N&uacute;mero do processo</th><th>Classe judicial</th><th>Assunto</th><th>&Uacute;ltima movimenta&ccedil;&atilde;o</th><th>Partes</th></tr>";
+								
+				$numero = $selenium->getText("//table[@id='dT']/tbody/tr/td");
+				$classe = $selenium->getText("//table[@id='dT']/tbody/tr/td[1]");	
+				$asssunto = $selenium->getText("//table[@id='dT']/tbody/tr/td[2]");	
+				$ultima_movimentacao = $selenium->getText("//table[@id='dT']/tbody/tr/td[3]");	
+				$partes = $selenium->getText("//table[@id='dT']/tbody/tr/td[4]");	
+			
+				$resultado .= "<tr>";
+				if(existeElemento($numero)){ $resultado .= "<td>".$numero."</td>"; }else{ $resultado .= "<td></td>"; };
+				if(existeElemento($classe)){ $resultado .= "<td>".$classe."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($assunto)){ $resultado .= "<td>".$assunto."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($ultima_movimentacao)){ $resultado .= "<td>".$ultima_movimentacao."</td>"; }else{ $resultado .= "<td></td>"; }
+				if(existeElemento($partes)){ $resultado .= "<td>".$partes."</td>"; }else{ $resultado .= "<td></td>"; }
+				$resultado .= "</tr>";					
+
+				$resultado .= "</table>";	
+			}
+			else
+			{
+				$resultado .= "Nenhum resultado foi encontrado";
+			}
+			
+			$selenium->stop();
+			$selenium->close();	
+		}
+		else
+		{
+			$resultado .= "N&atilde;o foi poss&iacute;vel realizar sua pesquisa. Por favor preencha o n&uacute;mero do processo.";
+		}	
+		
+		return $resultado;
+	}
 ?>
