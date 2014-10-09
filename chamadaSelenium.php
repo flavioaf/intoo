@@ -1,5 +1,5 @@
 <?php
-	require_once("classes/ConsultaTribunal.php");	
+	require("consultaTribunal.php");	
 	extract($_GET);
 	
 	//Função para criar diretórios

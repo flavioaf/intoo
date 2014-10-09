@@ -1,5 +1,5 @@
 <?php
-	require_once 'Testing/Selenium.php';
+	require_once "(./Testing/Selenium.php");
 	require_once 'PHPUnit/Framework/Test.php';
 	require_once 'PHPUnit/Framework/Assert.php';
 	require_once 'PHPUnit/Framework/SelfDescribing.php';
@@ -42,7 +42,7 @@
 	  
 	  protected function consulta1Regiao($uf, $cnpj)
 	  {
-		$selenium1 = new Testing_Selenium("*chrome", "http://processual.trf1.jus.br/consultaProcessual/cpfCnpjParte.php?secao=".$uf);
+		$selenium1 = new Testing_Selenium("*firefox", "http://processual.trf1.jus.br/consultaProcessual/cpfCnpjParte.php?secao=".$uf);
 		$selenium1->start();
 		$selenium1->open("/consultaProcessual/cpfCnpjParte.php?secao=".$uf);
 		$srcCaptcha = $selenium1->getAttribute("image_captcha@src");
@@ -59,7 +59,7 @@
 		
 		$urlImagem = "http://processual.trf1.jus.br".$srcCaptcha;			
 				
-		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 		$selenium2->start();
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -152,7 +152,7 @@
 			break;
 		}
 		
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -197,7 +197,7 @@
 	  
 	  protected function consulta3Regiao($uf, $cnpj)	  
 	  {			 
-		$selenium = new Testing_Selenium("*chrome", "http://www.jfsp.jus.br/foruns-federais/");
+		$selenium = new Testing_Selenium("*firefox", "http://www.jfsp.jus.br/foruns-federais/");
 		$selenium->start();
 		$selenium->open("http://www.jfsp.jus.br/foruns-federais/");
 		$selenium->windowMaximize();
@@ -281,7 +281,7 @@
 			break;			
 		}
 		
-		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1 = new Testing_Selenium("*firefox", $url);
 		$selenium1->start();
 		$selenium1->open($url);
 		$selenium1->windowMaximize();
@@ -327,7 +327,7 @@
 			imagecopy($captcha, $printscreen, 0, 0, 220, 280, 120, 40);
 			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");							
 					
-			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 			$selenium2->start();
 			$selenium2->setTimeout(60000);
 			$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -383,7 +383,7 @@
 			break;				
 		}
 
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -530,7 +530,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -572,7 +572,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -619,7 +619,7 @@
 	  
 		if(isset($nome) && $nome != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);	
 			$selenium->waitForPageToLoad("10000");				
@@ -694,7 +694,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1 = new Testing_Selenium("*firefox", $url);
 		$selenium1->start();
 		$selenium1->open($url);	
 		$selenium1->waitForPageToLoad("10000");		
@@ -707,7 +707,7 @@
 		imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
 		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
-		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 		$selenium2->start();
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -762,7 +762,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -804,7 +804,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -853,7 +853,7 @@
 	  
 		if(isset($nome) && $nome != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
@@ -915,7 +915,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1 = new Testing_Selenium("*firefox", $url);
 		$selenium1->start();
 		$selenium1->open($url);
 		$selenium1->windowMaximize();
@@ -931,7 +931,7 @@
 		imagecopy($captcha, $printscreen, 0, 0, 100, 550, 120, 40);
 		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
-		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 		$selenium2->start();
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1014,7 +1014,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1 = new Testing_Selenium("*firefox", $url);
 		$selenium1->start();
 		$selenium1->open($url);	
 		$selenium1->waitForPageToLoad("10000");		
@@ -1027,7 +1027,7 @@
 		imagecopy($captcha, $printscreen, 0, 0, 175, 400, 200, 50);
 		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
-		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 		$selenium2->start();
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1084,7 +1084,7 @@
 		
 		if(isset($nome) && $nome != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
@@ -1144,7 +1144,7 @@
 		
 		if(isset($nome) && $nome != "")
 		{
-			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1 = new Testing_Selenium("*firefox", $url);
 			$selenium1->start();
 			$selenium1->open($url);
 			$selenium1->windowMaximize();
@@ -1166,7 +1166,7 @@
 			imagecopy($captcha, $printscreen, 0, 0, 200, 425, 150, 50);
 			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 			
-			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 			$selenium2->start();
 			$selenium2->setTimeout(60000);
 			$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1215,7 +1215,7 @@
 		{
 			if(isset($processo) && $processo != "")
 			{						
-				$selenium1 = new Testing_Selenium("*chrome", $url);
+				$selenium1 = new Testing_Selenium("*firefox", $url);
 				$selenium1->start();
 				$selenium1->open($url);
 				$selenium1->windowMaximize();
@@ -1231,7 +1231,7 @@
 				imagecopy($captcha, $printscreen, 0, 0, 175, 330, 150, 50);
 				imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 				
-				$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+				$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 				$selenium2->start();
 				$selenium2->setTimeout(60000);
 				$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1284,7 +1284,7 @@
 		
 		if(isset($nome) && $nome != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
@@ -1348,7 +1348,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium1 = new Testing_Selenium("*chrome", $url);
+		$selenium1 = new Testing_Selenium("*firefox", $url);
 		$selenium1->start();
 		$selenium1->open($url);	
 		$selenium1->waitForPageToLoad("10000");		
@@ -1365,7 +1365,7 @@
 		imagecopy($captcha, $printscreen, 0, 0, 210, 290, 120, 30);
 		imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 		
-		$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+		$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 		$selenium2->start();
 		$selenium2->setTimeout(60000);
 		$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1425,7 +1425,7 @@
 		
 		if(isset($nome) && $nome != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
@@ -1482,7 +1482,7 @@
 	  
 		if(isset($processo) && $processo != "")
 		{
-			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1 = new Testing_Selenium("*firefox", $url);
 			$selenium1->start();
 			$selenium1->open($url);	
 			$selenium1->waitForPageToLoad("10000");		
@@ -1496,7 +1496,7 @@
 			imagecopy($captcha, $printscreen, 0, 0, 50, 440, 200, 75);
 			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 			
-			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 			$selenium2->start();
 			$selenium2->setTimeout(60000);
 			$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1541,7 +1541,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);	
 		$selenium->waitForPageToLoad("10000");		
@@ -1595,7 +1595,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -1637,7 +1637,7 @@
 	  {		
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -1700,7 +1700,7 @@
 		{
 			$url = "http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/proc_nome.jsp?comrCodigo=0010&numero=1";
 		
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
@@ -1752,7 +1752,7 @@
 			{
 				$url = "http://www.tjrr.jus.br/tjrr-siscom-webapp/pages/proc_massiva.jsp?comrCodigo=0010&numero=1";
 				
-				$selenium = new Testing_Selenium("*chrome", $url);
+				$selenium = new Testing_Selenium("*firefox", $url);
 				$selenium->start();
 				$selenium->open($url);
 				$selenium->windowMaximize();
@@ -1773,7 +1773,7 @@
 	  
 		if(isset($nome) && $nome != "")
 		{				
-			$selenium1 = new Testing_Selenium("*chrome", $url);
+			$selenium1 = new Testing_Selenium("*firefox", $url);
 			$selenium1->start();
 			$selenium1->open($url);
 			$selenium1->windowMaximize();
@@ -1790,7 +1790,7 @@
 			imagecopy($captcha, $printscreen, 0, 0, 725, 475, 150, 50);
 			imagepng($captcha, "C:\\xampp\\htdocs\\intoo\\trunk\\captchas\\captcha.png");
 			
-			$selenium2 = new Testing_Selenium("*chrome", "http://beatcaptchas.com/captcha.php");		
+			$selenium2 = new Testing_Selenium("*firefox", "http://beatcaptchas.com/captcha.php");		
 			$selenium2->start();
 			$selenium2->setTimeout(60000);
 			$selenium2->open("http://beatcaptchas.com/captcha.php");
@@ -1968,7 +1968,7 @@
 	  {
 		$resultado = "";
 	  
-		$selenium = new Testing_Selenium("*chrome", $url);
+		$selenium = new Testing_Selenium("*firefox", $url);
 		$selenium->start();
 		$selenium->open($url);
 		$selenium->windowMaximize();
@@ -2010,13 +2010,13 @@
 
 	  protected function consultaTRT2Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT3Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
@@ -2028,7 +2028,7 @@
 
 	  protected function consultaTRT5Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }	  
 
@@ -2040,109 +2040,109 @@
 
 	  protected function consultaTRT7Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT8Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }	  
 	  
 	  protected function consultaTRT9Regiao($url, $processo)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }		 
 
 	  protected function consultaTRT10Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }		  
 	  
 	  protected function consultaTRT11Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT12Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }		  
 	  
 	  protected function consultaTRT13Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT14Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT15Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT16Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT17Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }	  
 
 	  protected function consultaTRT18Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }	 
 	  
 	  protected function consultaTRT19Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT20Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }	
 
 	  protected function consultaTRT21Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT22Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT23Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
 	  protected function consultaTRT24Regiao($url)
 	  {
-		$resultado = buscarProcessoPJE($url, $processo)
+		$resultado = buscarProcessoPJE($url, $processo);
 		return $resultado;
 	  }
 
@@ -2251,7 +2251,7 @@
 	  
 		if(isset($processo) && $processo != "")
 		{
-			$selenium = new Testing_Selenium("*chrome", $url);
+			$selenium = new Testing_Selenium("*firefox", $url);
 			$selenium->start();
 			$selenium->open($url);
 			$selenium->windowMaximize();
